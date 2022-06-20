@@ -1,0 +1,205 @@
+class SprPerformanceMeasureSDK {
+  constructor(callback = undefined) {
+    if (callback === undefined) {
+      return;
+    }
+
+    const controls = callback();
+    this.displayGraph = controls.displayGraph;
+    this.closeGraph = controls.closeGraph;
+    this.displayPopup = controls.displayPopup;
+    this.closeSummary = controls.closeSummary;
+
+    // function to get summary of al statistics andd then send them to the popup by updating the states
+    this.displaySummary = function () {
+      const networkSummary = this.getNetworkStats(0);
+      const memorySummary = this.getMemoryStats();
+      const longTaskSummary = this.getLongTasks();
+
+      this.displayPopup(memorySummary, networkSummary, longTaskSummary);
+    };
+  }
+
+  // get network statistics
+  getNetworkStats(duration = 500) {
+    // if browser does not support window.performance
+    if (
+      window.performance === undefined ||
+      window.performance.getEntriesByType === undefined
+    ) {
+      return "Network requests can't be extracted!";
+    }
+
+    function shortenURL(url) {
+      let count = 0;
+      for (let i = 0; i < url.length; i++) {
+        if (url[i] == "/") {
+          count++;
+        }
+
+        if (count === 3) {
+          return url.substring(i);
+        }
+      }
+    }
+    // array to store required resources
+    const extractedRequests = [];
+
+    const allRequests = window.performance.getEntriesByType("resource");
+
+    for (let i = 0; i < allRequests.length; i++) {
+      const request = allRequests[i];
+
+      const currDuration = request.duration;
+      if (currDuration >= duration) {
+        const requestedURL = request.name; // url
+        const ttfb = request.responseStart - request.requestStart; // time to first byte
+        const initiatorType = request.initiatorType;
+
+        // manually updating the request type to API if the initiator is fetch
+        const reqType = initiatorType === "fetch" ? "API" : request.entryType; // request type
+
+        // storing all request info into a request object
+        const req = {
+          requestedURL: requestedURL,
+          timeTaken: currDuration.toFixed(2) + "ms",
+          reqType: reqType,
+          ttfb: ttfb.toFixed(2) + "ms",
+          timeVal: Number(currDuration.toFixed(2)),
+          shortURL: shortenURL(requestedURL),
+          initiatorType: initiatorType,
+        };
+
+        extractedRequests.push(req);
+      }
+    }
+
+    // if the length of requested resources exceeds 240 then clear all the resources
+    if (allRequests.length >= 240) {
+      performance.clearResourceTimings();
+    }
+
+    // Sorting the network requests in increasing order on the basis of duration.
+
+    extractedRequests.sort(function (a, b) {
+      if (a.timeVal < b.timeVal) {
+        return 1;
+      }
+      return -1;
+    });
+
+    return extractedRequests;
+  }
+
+  getMemoryStats() {
+    // get memory statistics
+    const memoryData = performance.memory;
+
+    let currentAllocatedHeap = memoryData.totalJSHeapSize; // current heap size
+    let totalMemoryHeapUsed = memoryData.usedJSHeapSize; // used heap size
+    let heapSizeLimit = memoryData.jsHeapSizeLimit; // maximum heap size limit
+
+    // converting Bytes to Megabytes
+    currentAllocatedHeap = currentAllocatedHeap / (1024 * 1024);
+    totalMemoryHeapUsed = totalMemoryHeapUsed / (1024 * 1024);
+    heapSizeLimit = heapSizeLimit / (1024 * 1024);
+
+    // storing memory info into memoryStats object
+    const memoryStats = {
+      currentAllocatedMemoryHeap: currentAllocatedHeap.toFixed(2) + "MB",
+      totalMemoryHeapUsed: totalMemoryHeapUsed.toFixed(2) + "MB",
+      memoryHeapSizeLimit: heapSizeLimit.toFixed(2) + "MB",
+    };
+    return memoryStats;
+  }
+
+  getLongTasks() {
+    let longTasks = []; // array to store list of long tasks
+    const observer = new PerformanceObserver(function () {});
+
+    observer.observe({ type: "longtask", buffered: true });
+
+    longTasks = observer.takeRecords();
+
+    // This method removes the event listener from the observer
+    observer.disconnect();
+
+    // Sorting the long tasks in increasing order on the basis of duration.
+    longTasks.sort(function (a, b) {
+      if (a.duration < b.duration) {
+        return 1;
+      }
+
+      return -1;
+    });
+
+    return longTasks;
+  }
+
+  // function to get summary of all statistics and post them to an API
+  // sendSummary() {
+  //   const finalSummary = {
+  //     networkSummary: this.getNetworkStats(0),
+  //     memorySummary: this.getMemoryStats(),
+  //     longTaskSummary: this.getLongTasks(),
+  //   };
+
+  //   const postSummary = async () => {
+  //     // post data to api
+  //     const response = await fetch("/api/summary", {
+  //       method: "POST",
+  //       body: JSON.stringify(finalSummary),
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
+
+  //     const data = await response.json();
+  //     console.log(data);
+  //   };
+
+  //   postSummary();
+  // }
+
+  // function to get summary of all statistics and print them on the console
+  printSummary() {
+    const finalSummary = {
+      networkSummary: this.getNetworkStats(0),
+      memorySummary: this.getMemoryStats(),
+      longTaskSummary: this.getLongTasks(),
+    };
+
+    console.log("Summary: ", finalSummary);
+  }
+
+  // function to start profile recording
+  startProfiling(profileName, timer = 15000) {
+    console.profile(profileName);
+    if (!(timer === undefined)) {
+      setTimeout(() => {
+        console.profileEnd(profileName);
+      }, timer);
+    }
+  }
+
+  // Method to get the cpu stats
+
+  getCPUStats() {
+    //Sending a message to the background script to get the cpu stats
+    chrome.runtime.sendMessage("get cpu stats");
+  }
+}
+
+const sdk = new SprPerformanceMeasureSDK();
+window.sdk = sdk;
+
+// Recieving a message
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+  // If the messsage is recieved from the background script
+  if (message.text === "CPU") {
+    console.log(message);
+  } else if (message === "network") {
+    // const reqs = sdk.getNetworkStats(0);
+    sendResponse("Apple");
+  }
+});
