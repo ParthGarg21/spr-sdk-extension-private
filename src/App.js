@@ -9,6 +9,10 @@ import { MdOutlineExpandMore } from "react-icons/md";
 import { useState } from "react";
 
 import LineChart from "./components/LineGraph";
+import Network from "./components/Network";
+import Memory from "./components/Memory";
+import LongTasks from "./components/LongTasks";
+import CPU from "./components/CPU";
 
 function App() {
   const [memory, setMemory] = useState(false);
@@ -49,15 +53,18 @@ function App() {
               <div className="exp-icn-con">
                 {!network ? (
                   <MdOutlineExpandMore
+                    className="exp-icn"
                     onClick={expandNet}
                   ></MdOutlineExpandMore>
                 ) : (
                   <MdOutlineExpandLess
+                    className="exp-icn"
                     onClick={expandNet}
                   ></MdOutlineExpandLess>
                 )}
               </div>
             </div>
+            {network ? <Network></Network> : <></>}
 
             <div className="feature">
               <div className="icn-con">
@@ -67,15 +74,18 @@ function App() {
               <div className="exp-icn-con">
                 {!memory ? (
                   <MdOutlineExpandMore
+                    className="exp-icn"
                     onClick={expandMem}
                   ></MdOutlineExpandMore>
                 ) : (
                   <MdOutlineExpandLess
+                    className="exp-icn"
                     onClick={expandMem}
                   ></MdOutlineExpandLess>
                 )}
               </div>
             </div>
+            {memory ? <Memory></Memory> : <></>}
 
             <div className="feature">
               <div className="icn-con">
@@ -85,16 +95,18 @@ function App() {
               <div className="exp-icn-con">
                 {!longTasks ? (
                   <MdOutlineExpandMore
+                    className="exp-icn"
                     onClick={expandLongTask}
                   ></MdOutlineExpandMore>
                 ) : (
                   <MdOutlineExpandLess
+                    className="exp-icn"
                     onClick={expandLongTask}
                   ></MdOutlineExpandLess>
                 )}
               </div>
             </div>
-
+            {longTasks ? <LongTasks></LongTasks> : <></>}
             <div className="feature">
               <div className="icn-con">
                 <BsCpuFill className="icn"></BsCpuFill>
@@ -103,16 +115,18 @@ function App() {
               <div className="exp-icn-con">
                 {!cpu ? (
                   <MdOutlineExpandMore
+                    className="exp-icn"
                     onClick={expandCPU}
                   ></MdOutlineExpandMore>
                 ) : (
                   <MdOutlineExpandLess
+                    className="exp-icn"
                     onClick={expandCPU}
                   ></MdOutlineExpandLess>
                 )}
               </div>
             </div>
-
+            {cpu ? <CPU></CPU> : <></>}
             <div className="feature">
               <div className="icn-con">
                 <VscGraphLine className="icn"></VscGraphLine>

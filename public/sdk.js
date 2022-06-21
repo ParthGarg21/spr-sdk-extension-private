@@ -1,5 +1,6 @@
 class SprPerformanceMeasureSDK {
   constructor(callback = undefined) {
+    //Attaching the debugger to the current tab
     chrome.runtime.sendMessage("attach");
 
     if (callback === undefined) {
@@ -138,7 +139,6 @@ class SprPerformanceMeasureSDK {
     return longTasks;
   }
 
-  
   // function to get summary of all statistics and print them on the console
   printSummary() {
     const finalSummary = {
@@ -164,17 +164,15 @@ class SprPerformanceMeasureSDK {
 
   getCPUStats() {
     //Sending a message to the background script to get the cpu stats
-    chrome.runtime.sendMessage("get cpu stats");
+    chrome.runtime.sendMessage("cpu");
   }
 
-  makeRandom() {
-    chrome.runtime.sendMessage("random");
-  }
-
+  // Method to get a heap snapshot
   getSnapShot() {
-    chrome.runtime.sendMessage("snapshot")
+    chrome.runtime.sendMessage("snapshot");
   }
 
+  // Method to get the cpu profile
   getProfile() {
     chrome.runtime.sendMessage("profile");
   }
@@ -186,10 +184,49 @@ window.sdk = sdk;
 // Recieving a message
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   // If the messsage is recieved from the background script
-  if (message.text === "CPU") {
+  if (message.text === "cpu") {
     console.log(message);
   } else if (message === "network") {
-    // const reqs = sdk.getNetworkStats(0);
-    sendResponse("Apple");
+    console.log("got network req");
+    sendNetworkStats();
+  } else if (message === "memory") {
+    console.log("got memory req");
+    sendMemoryStats();
+  } else if (message == "longtasks") {
+    console.log("got long task req");
+    sendLongTasks();
   }
 });
+
+// Function to send the network stats
+function sendMemoryStats() {
+  const memory = sdk.getMemoryStats();
+  const data = {
+    txt: "memory",
+    memory: memory,
+  };
+
+  chrome.runtime.sendMessage(data);
+}
+
+// Function to send the network stats
+function sendNetworkStats() {
+  const network = sdk.getNetworkStats(0);
+  const data = {
+    txt: "network",
+    network: network,
+  };
+
+  chrome.runtime.sendMessage(data);
+}
+
+// Function to send the long tasks stats
+function sendLongTasks() {
+  const longtasks = sdk.getLongTasks();
+  const data = {
+    txt: "longtasks",
+    longtasks: longtasks,
+  };
+
+  chrome.runtime.sendMessage(data);
+}

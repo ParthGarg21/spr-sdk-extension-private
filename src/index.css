@@ -21,7 +21,7 @@ code {
 .wrapper {
   width: 500px;
   height: 425px;
-  overflow:scroll;
+  overflow: scroll;
 }
 
 .main-container {
@@ -92,4 +92,117 @@ code {
 .chart {
   height: 100%;
   width: 100%;
+}
+
+.summary {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1.5px solid rgb(195, 195, 195);
+}
+
+.table {
+  width: 97.5%;
+  display: flex;
+  flex-direction: column;
+  border-spacing: 0;
+  border: 2px solid;
+  border-radius: .5rem;
+  margin: .5rem 0;
+}
+
+.row {
+  width: 100%;
+  margin: 0;
+  display: flex;
+
+}
+
+.tbody,
+.thead {
+  width: 100%;
+}
+
+
+.num {
+  width: 15%;
+}
+
+.td {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  border-right: 1px solid;
+  overflow-x: scroll;
+  padding: .5rem !important;
+}
+
+.th {
+  justify-content: center;
+}
+
+.url {
+  width: 40%;
+  justify-content: start;
+}
+
+.tbody .row {
+  border-top: 2px solid;
+}
+
+.last {
+  border-right: 0;
+  text-align: center;
+}
+
+.exp-icn {
+  color: #000;
+  border: 100%;
+  border: 1px solid;
+  border-radius: 100%;
+  transition-duration: .25s;
+}
+
+.exp-icn:hover {
+  color: #fff;
+  background-color: #000;
+}
+
+.info-con {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem 0;
+  font-size: 1rem;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+}
+
+.summaryList {
+  border: 2px solid;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  font-size: 1rem;
+}
+
+.listItem {
+  display: flex;
+  width: 100%;
+}
+
+.lt-span {
+  width: 50%;
+}
+
+.lt-td {
+  width: 50%;
 }

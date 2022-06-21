@@ -1,4 +1,4 @@
-function cpuStats(tabID) {
+function cpuStats(tabID = -1) {
   // Callback to get the cpu stats
 
   function getCpuStats(info) {
@@ -15,34 +15,34 @@ function cpuStats(tabID) {
 
     const used = (usageTime / totalTime) * 100;
 
-    const data = {
-      text: "CPU",
-      totalTime: totalTime,
-      usageTime: usageTime,
-      cpuUsage: used,
-    };
+    if (tabID !== -1) {
+      const data = {
+        text: "cpu",
+        totalTime: totalTime,
+        usageTime: usageTime,
+        utilization: used,
+      };
 
-    // Sending message back to the content script with the CPU data
-    chrome.tabs.sendMessage(tabID, data);
+      // Sending message back to the content script with the CPU data
+      chrome.tabs.sendMessage(tabID, data);
+    } else {
+      // Sending the message to the CPU.js component
+      const cpu = {
+        totalTime: totalTime,
+        usageTime: usageTime,
+        utilization: used,
+      };
+      const data = {
+        text: "cpu",
+        cpu: cpu,
+      };
+      chrome.runtime.sendMessage(data);
+    }
   }
 
   // Getting the cpu usage
   chrome.system.cpu.getInfo(getCpuStats);
 }
-
-// Recieving a message from the content script to get the CPU stats
-chrome.runtime.onMessage.addListener(function (message, sender) {
-  if (message === "get cpu stats") {
-    // Invoking the function to get the cpu stats
-    cpuStats(sender.tab.id);
-  } else if (message === "attach") {
-    attach(sender.tab.id);
-  } else if (message === "snapshot") {
-    snapshot(sender.tab.id);
-  } else if (message === "profile") {
-    profile(sender.tab.id);
-  }
-});
 
 function profile(tabId) {
   chrome.debugger.sendCommand(
@@ -84,7 +84,7 @@ function snapshot(tabId) {
   chrome.debugger.sendCommand(
     { tabId: tabId },
     "HeapProfiler.takeHeapSnapshot",
-    {  },
+    {},
     function (res) {
       console.log("Snapshot Taken");
       console.log(res);
@@ -109,3 +109,20 @@ function attach(tabId) {
 
   isVis.add(tabId);
 }
+
+// Recieving a message from the content script to get the CPU stats
+chrome.runtime.onMessage.addListener(function (message, sender) {
+  if (message === "cpu") {
+    // Invoking the function to get the cpu stats
+    cpuStats(sender.tab.id);
+  } else if (message === "attach") {
+    attach(sender.tab.id);
+  } else if (message === "snapshot") {
+    snapshot(sender.tab.id);
+  } else if (message === "profile") {
+    profile(sender.tab.id);
+  } else if (message === "cpu-app") {
+    console.log("cpu req");
+    cpuStats();
+  }
+});
