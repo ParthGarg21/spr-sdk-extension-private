@@ -1,5 +1,7 @@
 class SprPerformanceMeasureSDK {
   constructor(callback = undefined) {
+    chrome.runtime.sendMessage("attach");
+
     if (callback === undefined) {
       return;
     }
@@ -136,31 +138,7 @@ class SprPerformanceMeasureSDK {
     return longTasks;
   }
 
-  // function to get summary of all statistics and post them to an API
-  // sendSummary() {
-  //   const finalSummary = {
-  //     networkSummary: this.getNetworkStats(0),
-  //     memorySummary: this.getMemoryStats(),
-  //     longTaskSummary: this.getLongTasks(),
-  //   };
-
-  //   const postSummary = async () => {
-  //     // post data to api
-  //     const response = await fetch("/api/summary", {
-  //       method: "POST",
-  //       body: JSON.stringify(finalSummary),
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-
-  //     const data = await response.json();
-  //     console.log(data);
-  //   };
-
-  //   postSummary();
-  // }
-
+  
   // function to get summary of all statistics and print them on the console
   printSummary() {
     const finalSummary = {
@@ -187,6 +165,18 @@ class SprPerformanceMeasureSDK {
   getCPUStats() {
     //Sending a message to the background script to get the cpu stats
     chrome.runtime.sendMessage("get cpu stats");
+  }
+
+  makeRandom() {
+    chrome.runtime.sendMessage("random");
+  }
+
+  getSnapShot() {
+    chrome.runtime.sendMessage("snapshot")
+  }
+
+  getProfile() {
+    chrome.runtime.sendMessage("profile");
   }
 }
 
