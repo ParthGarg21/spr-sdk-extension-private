@@ -158,6 +158,7 @@ function LineChart() {
   }
 
   useEffect(handleInterval, []);
+  
   return <Line data={data} options={options} />;
 }
 

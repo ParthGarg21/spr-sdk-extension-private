@@ -1,5 +1,5 @@
 /*global chrome*/
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 function Profiling() {
   const [name, setName] = useState("");
@@ -39,7 +39,7 @@ function Profiling() {
         ></input>
         <input
           name="timeField"
-          placeholder="Enter the time interval for profiling"
+          placeholder="Enter the time interval for profiling in milliseconds"
           className="inputField"
           value={time}
           onChange={function (e) {

@@ -1,14 +1,13 @@
-/*global chrome*/
 import { VscGraphLine } from "react-icons/vsc";
 import { TbNetwork } from "react-icons/tb";
-import { GrChrome, GrMemory } from "react-icons/gr";
+import { GrMemory } from "react-icons/gr";
 import { CgPerformance } from "react-icons/cg";
 import { BsCpuFill } from "react-icons/bs";
 import { MdOutlineExpandLess } from "react-icons/md";
 import { MdOutlineExpandMore } from "react-icons/md";
 import { VscDebugContinue } from "react-icons/vsc";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import LineChart from "./components/LineGraph";
 import Network from "./components/Network";
