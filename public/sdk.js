@@ -1,9 +1,6 @@
 /*global chrome*/
 class SprPerformanceMeasureSDK {
   constructor(callback = undefined) {
-    //Attaching the debugger to the current tab
-    chrome.runtime.sendMessage("attach");
-
     if (callback === undefined) {
       return;
     }
@@ -165,28 +162,41 @@ class SprPerformanceMeasureSDK {
   // Method to get the cpu stats
   getCPUStats() {
     //Sending a message to the background script to get the cpu stats
-    chrome.runtime.sendMessage("cpu");
-  }
-
-  // Method to get a heap snapshot
-  getSnapShot() {
-    chrome.runtime.sendMessage("snapshot");
-  }
-
-  // Method to get the cpu profile
-  getProfile() {
-    chrome.runtime.sendMessage("profile");
+    chrome.runtime.sendMessage("cpu-sdk");
   }
 }
 
 const sdk = new SprPerformanceMeasureSDK();
 window.sdk = sdk;
 
+let prevUsed = 0;
+let prevTotal = 0;
+
 // Recieving a message
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-  // If the messsage is recieved from the background script
-  if (message.text === "cpu") {
-    console.log(message);
+  // reset the previous values
+  if (message === "cpu-app") {
+    // send message to the bg script on recieving a message from the app
+    sdk.getCPUStats();
+  } else if (message.text === "cpu-bg") {
+    // send messgae to the app on recieving a message from the bg script
+    const currUsed = message.cpu.usageTime;
+    const currTotal = message.cpu.totalTime;
+
+    const usedDiff = Math.abs(currUsed - prevUsed);
+    const totalDiff = Math.abs(currTotal - prevTotal);
+
+    const cpu = (usedDiff / totalDiff) * 100;
+
+    prevTotal = currTotal;
+    prevUsed = currUsed;
+
+    const data = {
+      text: "cpu",
+      cpu: cpu,
+    };
+
+    sendCPU(data);
   } else if (message === "network") {
     console.log("got network req");
     sendNetworkStats();
@@ -229,5 +239,11 @@ function sendLongTasks() {
     longtasks: longtasks,
   };
 
+  chrome.runtime.sendMessage(data);
+}
+
+// Function to send the cpu stats back
+
+function sendCPU(data) {
   chrome.runtime.sendMessage(data);
 }

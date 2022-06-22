@@ -132,7 +132,15 @@ function App() {
                 )}
               </div>
             </div>
-            {cpu ? <CPU></CPU> : <></>}
+            {cpu ? (
+              <div className="lineChart">
+                <div className="chartContainer">
+                  <CPU></CPU>
+                </div>
+              </div>
+            ) : (
+              <></>
+            )}
             <div className="feature">
               <div className="icn-con">
                 <VscGraphLine className="icn"></VscGraphLine>

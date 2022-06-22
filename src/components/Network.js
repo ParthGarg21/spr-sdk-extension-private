@@ -41,20 +41,29 @@ function Network() {
 
   const [summary, setSummary] = useState([]);
 
+  // function to send a message to the sdk to get the network stats
   function sendMessage() {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       const tabId = tabs[0].id;
       chrome.tabs.sendMessage(tabId, "network");
     });
+
+    // Function to listen to the incoming message containint network info
+    function listener(message) {
+      if (message.txt === "network") {
+        // removing the listener to avoid redunadt listening
+        chrome.runtime.onMessage.removeListener(listener);
+        
+        console.log("n");
+        setSummary(message.network);
+      }
+    }
+
+    // Sending the message to the network stats
+    chrome.runtime.onMessage.addListener(listener);
   }
 
   useEffect(sendMessage, []);
-
-  chrome.runtime.onMessage.addListener(function (message) {
-    if (message.txt === "network") {
-      setSummary(message.network);
-    }
-  });
 
   return (
     <div className="summary tableContainer">

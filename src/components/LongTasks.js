@@ -24,16 +24,24 @@ function LongTasks() {
       const tabId = tabs[0].id;
       chrome.tabs.sendMessage(tabId, "longtasks");
     });
+
+    // Function to listen to the incoming message containintg long task info
+    function listener(message) {
+      
+      if (message.txt === "longtasks") {
+        // removing the listener to avoid redundant listening
+        chrome.runtime.onMessage.removeListener(listener);
+        
+        console.log("lt");
+        setSummary(message.longtasks);
+      }
+    }
+
+    // Sending the message to the get the long task requests
+    chrome.runtime.onMessage.addListener(listener);
   }
 
   useEffect(sendMessage, []);
-
-  chrome.runtime.onMessage.addListener(function (message) {
-    if (message.txt === "longtasks") {
-      setSummary(message.longtasks);
-      console.log(summary);
-    }
-  });
 
   return (
     <>
