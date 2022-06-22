@@ -19,6 +19,7 @@ function App() {
   const [network, setNetwork] = useState(false);
   const [longTasks, setLongTasks] = useState(false);
   const [cpu, setCPU] = useState(false);
+  const [networkGraph, setNetworkGraph] = useState(false);
 
   function expandMem() {
     setMemory(!memory);
@@ -34,6 +35,11 @@ function App() {
 
   function expandCPU() {
     setCPU(!cpu);
+  }
+
+  function expandNetworkGraph() {
+    console.log(networkGraph);
+    setNetworkGraph(!networkGraph);
   }
 
   return (
@@ -132,14 +138,31 @@ function App() {
                 <VscGraphLine className="icn"></VscGraphLine>
               </div>
               <h3 className="feature-title">Network latency graph</h3>
+              <div className="exp-icn-con">
+                {!networkGraph ? (
+                  <MdOutlineExpandMore
+                    className="exp-icn"
+                    onClick={expandNetworkGraph}
+                  ></MdOutlineExpandMore>
+                ) : (
+                  <MdOutlineExpandLess
+                    className="exp-icn"
+                    onClick={expandNetworkGraph}
+                  ></MdOutlineExpandLess>
+                )}
+              </div>
             </div>
           </div>
         </div>
-        <div className="lineChart">
-          <div className="chartContainer">
-            <LineChart className="chart"></LineChart>
+        {networkGraph ? (
+          <div className="lineChart">
+            <div className="chartContainer">
+              <LineChart className="chart"></LineChart>
+            </div>
           </div>
-        </div>
+        ) : (
+          <></>
+        )}
       </div>
     </>
   );
