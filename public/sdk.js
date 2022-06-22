@@ -152,11 +152,9 @@ class SprPerformanceMeasureSDK {
   // function to start profile recording
   startProfiling(profileName, timer = 15000) {
     console.profile(profileName);
-    if (!(timer === undefined)) {
-      setTimeout(() => {
-        console.profileEnd(profileName);
-      }, timer);
-    }
+    setTimeout(() => {
+      console.profileEnd(profileName);
+    }, timer);
   }
 
   // Method to get the cpu stats
@@ -175,7 +173,10 @@ let prevTotal = 0;
 // Recieving a message
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   // reset the previous values
-  if (message === "cpu-app") {
+  if (message.time !== undefined) {
+    console.log(message);
+    sdk.startProfiling(message.profileName, message.time);
+  } else if (message === "cpu-app") {
     // send message to the bg script on recieving a message from the app
     sdk.getCPUStats();
   } else if (message.text === "cpu-bg") {

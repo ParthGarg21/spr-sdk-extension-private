@@ -1,18 +1,21 @@
+/*global chrome*/
 import { VscGraphLine } from "react-icons/vsc";
 import { TbNetwork } from "react-icons/tb";
-import { GrMemory } from "react-icons/gr";
+import { GrChrome, GrMemory } from "react-icons/gr";
 import { CgPerformance } from "react-icons/cg";
 import { BsCpuFill } from "react-icons/bs";
 import { MdOutlineExpandLess } from "react-icons/md";
 import { MdOutlineExpandMore } from "react-icons/md";
+import { VscDebugContinue } from "react-icons/vsc";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import LineChart from "./components/LineGraph";
 import Network from "./components/Network";
 import Memory from "./components/Memory";
 import LongTasks from "./components/LongTasks";
 import CPU from "./components/CPU";
+import Profiling from "./components/Profiling";
 
 function App() {
   const [memory, setMemory] = useState(false);
@@ -20,6 +23,7 @@ function App() {
   const [longTasks, setLongTasks] = useState(false);
   const [cpu, setCPU] = useState(false);
   const [networkGraph, setNetworkGraph] = useState(false);
+  const [profiling, setProfiling] = useState(false);
 
   function expandMem() {
     setMemory(!memory);
@@ -38,8 +42,11 @@ function App() {
   }
 
   function expandNetworkGraph() {
-    console.log(networkGraph);
     setNetworkGraph(!networkGraph);
+  }
+
+  function expandProfiling() {
+    setProfiling(!profiling);
   }
 
   return (
@@ -164,13 +171,33 @@ function App() {
         </div>
         {networkGraph ? (
           <div className="lineChart">
-            <div className="chartContainer">
+            <div className="networkContainer">
               <LineChart className="chart"></LineChart>
             </div>
           </div>
         ) : (
           <></>
         )}
+        <div className="feature">
+          <div className="icn-con">
+            <VscDebugContinue className="icn"></VscDebugContinue>
+          </div>
+          <h3 className="feature-title">Performance Profiling</h3>
+          <div className="exp-icn-con">
+            {!profiling ? (
+              <MdOutlineExpandMore
+                className="exp-icn"
+                onClick={expandProfiling}
+              ></MdOutlineExpandMore>
+            ) : (
+              <MdOutlineExpandLess
+                className="exp-icn"
+                onClick={expandProfiling}
+              ></MdOutlineExpandLess>
+            )}
+          </div>
+        </div>
+        {profiling ? <Profiling></Profiling> : <></>}
       </div>
     </>
   );
