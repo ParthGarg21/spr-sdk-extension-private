@@ -44,7 +44,6 @@ code {
 }
 
 .feature {
-  cursor: pointer;
   height: 70px;
   width: 100%;
   display: flex;
@@ -159,6 +158,7 @@ code {
 }
 
 .exp-icn {
+  cursor: pointer;
   color: #000;
   border: 100%;
   border: 1px solid;
