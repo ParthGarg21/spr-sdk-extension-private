@@ -21,7 +21,7 @@ code {
 .wrapper {
   width: 500px;
   height: 425px;
-  overflow: scroll;
+  overflow-y: auto;
 }
 
 .main-container {
@@ -30,7 +30,7 @@ code {
 
 
 .title-container {
-  height: 60px;
+  height: 70px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -77,7 +77,7 @@ code {
 }
 
 .lineChart {
-  width: 500px;
+  width: 450px;
   display: flex;
   justify-content: center;
   align-items: center;
