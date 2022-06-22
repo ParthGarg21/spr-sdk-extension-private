@@ -1,3 +1,6 @@
+/*global chrome*/
+
+// function to get the cpu stats
 function cpuStats(tabID = -1) {
   // Callback to get the cpu stats
 
@@ -13,6 +16,7 @@ function cpuStats(tabID = -1) {
       usageTime += processor.usage.kernel + processor.usage.user;
     }
 
+    // Converting the usage to percentage
     const used = (usageTime / totalTime) * 100;
 
     if (tabID !== -1) {

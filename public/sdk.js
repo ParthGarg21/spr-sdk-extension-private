@@ -1,3 +1,4 @@
+/*global chrome*/
 class SprPerformanceMeasureSDK {
   constructor(callback = undefined) {
     //Attaching the debugger to the current tab
@@ -13,7 +14,7 @@ class SprPerformanceMeasureSDK {
     this.displayPopup = controls.displayPopup;
     this.closeSummary = controls.closeSummary;
 
-    // function to get summary of al statistics andd then send them to the popup by updating the states
+    // function to get summary of all statistics and then send them to the popup by updating the states
     this.displaySummary = function () {
       const networkSummary = this.getNetworkStats(0);
       const memorySummary = this.getMemoryStats();
@@ -94,8 +95,8 @@ class SprPerformanceMeasureSDK {
     return extractedRequests;
   }
 
+  // get memory statistics
   getMemoryStats() {
-    // get memory statistics
     const memoryData = performance.memory;
 
     let currentAllocatedHeap = memoryData.totalJSHeapSize; // current heap size
@@ -116,6 +117,7 @@ class SprPerformanceMeasureSDK {
     return memoryStats;
   }
 
+  // get long tasks statistics
   getLongTasks() {
     let longTasks = []; // array to store list of long tasks
     const observer = new PerformanceObserver(function () {});
@@ -161,7 +163,6 @@ class SprPerformanceMeasureSDK {
   }
 
   // Method to get the cpu stats
-
   getCPUStats() {
     //Sending a message to the background script to get the cpu stats
     chrome.runtime.sendMessage("cpu");
