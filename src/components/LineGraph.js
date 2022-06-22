@@ -3,30 +3,36 @@ import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 
-function getTime() {
-  const date = new Date();
-  let hours = date.getHours();
-  let minutes = date.getMinutes();
-
-  let ampm = hours >= 12 ? "pm" : "am";
-  hours = hours % 12;
-  hours = hours ? hours : 12;
-  minutes = minutes < 10 ? "0" + minutes : minutes;
-  let strTime = hours + ":" + minutes + ampm;
-
-  if (date.getSeconds() !== 0) {
-    strTime = "              ";
-  }
-  return strTime;
-}
 
 function LineChart() {
+
+
+  function getTime(isInitial) {
+    const date = new Date();
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+  
+    let ampm = hours >= 12 ? "pm" : "am";
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    let sec = date.getSeconds();
+    let strTime = hours + ":" + minutes + ampm;
+  
+    if (isInitial || sec !== 0) {
+      strTime = "              ";
+    }
+  
+    return strTime;
+  }
+  
+
   const yDummy = [];
   const xDummy = [];
 
   // Filling the dummy data inside the dummy arrays
   for (let i = 0; i < 240; i++) {
-    xDummy.push(getTime());
+    xDummy.push(getTime(true));
     yDummy.push(undefined);
   }
 
@@ -64,7 +70,7 @@ function LineChart() {
       xData.shift();
       yData.shift();
 
-      xData.push(getTime());
+      xData.push(getTime(false));
       yData.push(dur);
 
       // Setting the states.
@@ -158,7 +164,7 @@ function LineChart() {
   }
 
   useEffect(handleInterval, []);
-  
+
   return <Line data={data} options={options} />;
 }
 

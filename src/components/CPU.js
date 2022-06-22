@@ -7,7 +7,7 @@ import Chart from "chart.js/auto";
 function CPU() {
   // function to send a message to the sdk to get the cpu stats
 
-  function getTime() {
+  function getTime(isInitial) {
     const date = new Date();
     let hours = date.getHours();
     let minutes = date.getMinutes();
@@ -19,9 +19,10 @@ function CPU() {
     let sec = date.getSeconds();
     let strTime = hours + ":" + minutes + ampm;
 
-    if (sec !== 0) {
+    if (isInitial || sec !== 0) {
       strTime = "              ";
     }
+
     return strTime;
   }
 
@@ -31,7 +32,7 @@ function CPU() {
 
   // Filling the dummy data inside the dummy arrays
   for (let i = 0; i < 240; i++) {
-    xDummy.push(getTime());
+    xDummy.push(getTime(true));
     yDummy.push(undefined);
   }
 
@@ -58,7 +59,7 @@ function CPU() {
         xData.shift();
         yData.shift();
 
-        xData.push(getTime());
+        xData.push(getTime(false));
         yData.push(cpuUsage);
 
         // Setting the states.
