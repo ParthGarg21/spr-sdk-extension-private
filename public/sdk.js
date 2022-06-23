@@ -162,6 +162,11 @@ class SprPerformanceMeasureSDK {
     //Sending a message to the background script to get the cpu stats
     chrome.runtime.sendMessage("cpu-sdk");
   }
+
+  // Method to get the har data
+  getHAR() {
+    chrome.runtime.sendMessage("get-har");
+  }
 }
 
 const sdk = new SprPerformanceMeasureSDK();
@@ -207,7 +212,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   } else if (message == "longtasks") {
     console.log("got long task req");
     sendLongTasks();
-  }
+  } 
 });
 
 // Function to send the network stats

@@ -36,5 +36,10 @@ chrome.runtime.onMessage.addListener(function (message, sender) {
   if (message === "cpu-sdk") {
     // Invoking the function to get the cpu stats
     cpuStats(sender.tab.id);
+
+  } else if (message === "get-har") { 
+    // Sending the message to the devtools to get the har
+    chrome.runtime.sendMessage("get-har-bg");
+
   }
 });

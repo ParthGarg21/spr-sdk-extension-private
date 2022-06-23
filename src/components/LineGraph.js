@@ -3,29 +3,25 @@ import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 
-
 function LineChart() {
-
-
   function getTime(isInitial) {
     const date = new Date();
     let hours = date.getHours();
     let minutes = date.getMinutes();
-  
+
     let ampm = hours >= 12 ? "pm" : "am";
     hours = hours % 12;
     hours = hours ? hours : 12;
     minutes = minutes < 10 ? "0" + minutes : minutes;
     let sec = date.getSeconds();
     let strTime = hours + ":" + minutes + ampm;
-  
+
     if (isInitial || sec !== 0) {
       strTime = "              ";
     }
-  
+
     return strTime;
   }
-  
 
   const yDummy = [];
   const xDummy = [];
@@ -72,7 +68,6 @@ function LineChart() {
 
       xData.push(getTime(false));
       yData.push(dur);
-
       // Setting the states.
       setXData([...xData]);
       setYData([...yData]);
