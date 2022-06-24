@@ -19,4 +19,19 @@ chrome.runtime.onMessage.addListener(function (message) {
       });
     });
   }
+  // } else if (message.text === "heap-profile") {
+  //   downloadProfile(message.profile);
+  // }
 });
+
+// Function to download the CPU profile
+// function downloadProfile(profile) {
+//   const profileBLOB = new Blob([JSON.stringify(profile)]);
+
+//   const url = URL.createObjectURL(profileBLOB);
+
+//   chrome.downloads.download({
+//     url: url,
+//     filename: Date.now() + "cpu-profile",
+//   });
+// }

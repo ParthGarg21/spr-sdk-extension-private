@@ -2,7 +2,10 @@
 const GetHar = () => {
   function downloadHar() {
     //Sending the message to the sdk to get the profiling data
-    chrome.runtime.sendMessage("download-har");
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      const tabId = tabs[0].id;
+      chrome.tabs.sendMessage(tabId, "har");
+    });
   }
 
   return (

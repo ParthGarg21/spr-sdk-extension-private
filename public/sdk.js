@@ -1,6 +1,9 @@
 /*global chrome*/
 class SprPerformanceMeasureSDK {
   constructor(callback = undefined) {
+    // Sending the message to the bg script to attach the debugger
+    // chrome.runtime.sendMessage("attach");
+
     if (callback === undefined) {
       return;
     }
@@ -167,6 +170,11 @@ class SprPerformanceMeasureSDK {
   getHAR() {
     chrome.runtime.sendMessage("get-har");
   }
+
+  // Method to get the CPU profile
+  // getProfile() {
+  //   chrome.runtime.sendMessage("profile");
+  // }
 }
 
 const sdk = new SprPerformanceMeasureSDK();
@@ -212,7 +220,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   } else if (message == "longtasks") {
     console.log("got long task req");
     sendLongTasks();
-  } 
+  } else if (message === "har") {
+    sdk.getHAR();
+  }
 });
 
 // Function to send the network stats
@@ -249,7 +259,6 @@ function sendLongTasks() {
 }
 
 // Function to send the cpu stats back
-
 function sendCPU(data) {
   chrome.runtime.sendMessage(data);
 }
