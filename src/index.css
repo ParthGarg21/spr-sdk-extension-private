@@ -246,3 +246,34 @@ code {
   background-color: #000;
   color: #fff;
 }
+
+.getHarContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.harHeading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.downloadButton {
+  width: 130px;
+  height: 40px;
+  color: #000;
+  background-color: #fff;
+  border: none;
+  border: 1px solid;
+  border-radius: 9px;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.downloadButton:hover {
+  background-color: #000;
+  color: #fff;
+}

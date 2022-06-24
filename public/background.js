@@ -1,3 +1,5 @@
+/*global chrome*/
+
 function cpuStats(tabID) {
   // Callback to get the cpu stats
 
@@ -36,10 +38,8 @@ chrome.runtime.onMessage.addListener(function (message, sender) {
   if (message === "cpu-sdk") {
     // Invoking the function to get the cpu stats
     cpuStats(sender.tab.id);
-
-  } else if (message === "get-har") { 
+  } else if (message === "download-har") {
     // Sending the message to the devtools to get the har
     chrome.runtime.sendMessage("get-har-bg");
-
   }
 });

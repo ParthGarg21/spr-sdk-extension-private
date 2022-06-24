@@ -6,6 +6,7 @@ import { BsCpuFill } from "react-icons/bs";
 import { MdOutlineExpandLess } from "react-icons/md";
 import { MdOutlineExpandMore } from "react-icons/md";
 import { VscDebugContinue } from "react-icons/vsc";
+import { TbWorldDownload } from "react-icons/tb";
 
 import { useState } from "react";
 
@@ -15,6 +16,7 @@ import Memory from "./components/Memory";
 import LongTasks from "./components/LongTasks";
 import CPU from "./components/CPU";
 import Profiling from "./components/Profiling";
+import GetHar from "./components/GetHar";
 
 function App() {
   const [memory, setMemory] = useState(false);
@@ -23,6 +25,7 @@ function App() {
   const [cpu, setCPU] = useState(false);
   const [networkGraph, setNetworkGraph] = useState(false);
   const [profiling, setProfiling] = useState(false);
+  const [getHar, setGetHar] = useState(false);
 
   function expandMem() {
     setMemory(!memory);
@@ -46,6 +49,10 @@ function App() {
 
   function expandProfiling() {
     setProfiling(!profiling);
+  }
+
+  function expandGetHar() {
+    setGetHar(!getHar);
   }
 
   return (
@@ -197,6 +204,26 @@ function App() {
           </div>
         </div>
         {profiling ? <Profiling></Profiling> : <></>}
+        <div className="feature">
+          <div className="icn-con">
+            <TbWorldDownload className="icn"></TbWorldDownload>
+          </div>
+          <h3 className="feature-title">Save Requests as HAR</h3>
+          <div className="exp-icn-con">
+            {!getHar ? (
+              <MdOutlineExpandMore
+                className="exp-icn"
+                onClick={expandGetHar}
+              ></MdOutlineExpandMore>
+            ) : (
+              <MdOutlineExpandLess
+                className="exp-icn"
+                onClick={expandGetHar}
+              ></MdOutlineExpandLess>
+            )}
+          </div>
+        </div>
+        {getHar ? <GetHar></GetHar> : <></>}
       </div>
     </>
   );

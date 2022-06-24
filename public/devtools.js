@@ -1,5 +1,6 @@
-// function to recieve a message from the bg script to download the HAR file
+/*global chrome*/
 
+// function to recieve a message from the bg script to download the HAR file
 chrome.runtime.onMessage.addListener(function (message) {
   if (message === "get-har-bg") {
     // function to get the HAR file
