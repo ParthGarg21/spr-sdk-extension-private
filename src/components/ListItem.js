@@ -2,7 +2,7 @@ import { useState } from "react";
 import { MdOutlineExpandLess } from "react-icons/md";
 import { MdOutlineExpandMore } from "react-icons/md";
 
-const ListItem = (props) => {
+function ListItem(props) {
   const [myState, setMyState] = useState(false);
 
   function expand() {
@@ -11,7 +11,6 @@ const ListItem = (props) => {
 
   return (
     <div>
-      {" "}
       <div className="feature">
         <div className="icn-con">
           <props.icon className="icn"></props.icon>
@@ -34,6 +33,6 @@ const ListItem = (props) => {
       {myState ? <props.display></props.display> : <></>}
     </div>
   );
-};
+}
 
 export default ListItem;
