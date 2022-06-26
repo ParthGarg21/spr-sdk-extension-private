@@ -13,7 +13,7 @@ const GetHar = () => {
       <h3 className="harHeading">
         Click to save all the network requests as .HAR file
       </h3>
-      <button className="downloadButton" onClick={downloadHar}>
+      <button className="downloadButton btn" onClick={downloadHar}>
         Download
       </button>
     </div>

@@ -229,26 +229,9 @@ code {
 }
 
 .profileButton {
-  margin-top: 10px;
-  margin-bottom: 12px;
   width: 100%;
   color: #000;
   background-color: #fff;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-  border: none;
-  border: 1px solid;
-  transition: all;
-  transition-duration: 0.25s;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 500;
-
-}
-
-.profileButton:hover {
-  background-color: #000;
-  color: #fff;
 }
 
 .getHarContainer {
@@ -264,27 +247,31 @@ code {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 15px;
+  margin: 1rem 0;
+  font-size: 1rem;
+}
+
+.btn {
+  margin-top: 10px;
+  margin-bottom: 12px;
+  border-radius: .5rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  border: 1px solid;
+  transition: all;
+  transition-duration: 0.25s;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #000;
+  background-color: #fff;
+}
+
+.btn:hover {
+  background-color: #000;
+  color: #fff;
 }
 
 .downloadButton {
   width: 130px;
-  height: 40px;
-  color: #000;
-  background-color: #fff;
-  border: none;
-  border: 1px solid;
-  border-radius: 9px;
-  margin-top: 15px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: all;
-  transition-duration: .25s;
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-.downloadButton:hover {
-  background-color: #000;
-  color: #fff;
 }

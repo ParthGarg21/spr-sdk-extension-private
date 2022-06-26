@@ -46,7 +46,7 @@ function Profiling() {
             setTime(e.target.value);
           }}
         ></input>
-        <button className="profileButton" variant="dark" type="submit">
+        <button className="profileButton btn" type="submit">
           Start Profiling
         </button>
       </form>
