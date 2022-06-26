@@ -1,8 +1,6 @@
 /*global chrome*/
 class SprPerformanceMeasureSDK {
   constructor(callback = undefined) {
-    // Sending the message to the bg script to attach the debugger
-    // chrome.runtime.sendMessage("attach");
 
     if (callback === undefined) {
       return;
@@ -170,11 +168,6 @@ class SprPerformanceMeasureSDK {
   getHAR() {
     chrome.runtime.sendMessage("get-har");
   }
-
-  // Method to get the CPU profile
-  // getProfile() {
-  //   chrome.runtime.sendMessage("profile");
-  // }
 }
 
 const sdk = new SprPerformanceMeasureSDK();
