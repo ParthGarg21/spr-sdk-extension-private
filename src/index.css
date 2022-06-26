@@ -242,6 +242,8 @@ code {
   transition-duration: 0.25s;
   cursor: pointer;
   font-size: 1rem;
+  font-weight: 500;
+
 }
 
 .profileButton:hover {
@@ -279,6 +281,7 @@ code {
   transition: all;
   transition-duration: .25s;
   font-size: 1rem;
+  font-weight: 500;
 }
 
 .downloadButton:hover {
