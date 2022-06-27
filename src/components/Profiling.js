@@ -51,7 +51,7 @@ function Profiling() {
         ></input>
 
         <input
-          placeholder="Enter the time interval for profiling in milliseconds (default is 15 seconds)"
+          placeholder="Enter the time interval for profiling in ms (default is 15 sec)"
           className="inputField"
           value={time}
           onChange={function (e) {
