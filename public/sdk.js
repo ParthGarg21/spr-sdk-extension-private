@@ -15,7 +15,7 @@ class SprPerformanceMeasureSDK {
       let count = 0;
 
       for (let i = 0; i < url.length; i++) {
-        if (url[i] == "/") {
+        if (url[i] === "/") {
           count++;
         }
 
@@ -299,7 +299,7 @@ function sendSummaryAsJSON() {
 
   const s1 = "Memory Summary: " + JSON.stringify(memorySummary) + "\n";
   const s2 = "Network Summary: " + JSON.stringify(networkSummary) + "\n";
-  const s3 = "Long Task Summary: " + JSON.stringify(longTaskSummary) + "\n";
+  const s3 = "Long Tasks Summary: " + JSON.stringify(longTaskSummary) + "\n";
 
   const allSummary = s1 + s2 + s3;
 
