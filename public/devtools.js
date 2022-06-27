@@ -1,3 +1,5 @@
+// Devtools script. Gets activated only when the developer tools are open
+
 /*global chrome*/
 
 // function to recieve a message from the bg script to download the HAR file
@@ -8,11 +10,13 @@ chrome.runtime.onMessage.addListener(function (message) {
       const updatedHarLog = {};
       updatedHarLog.log = har;
 
-      //Downloading the HAR file
+      // Creating a BLOB object for the HAR file
       const harBLOB = new Blob([JSON.stringify(updatedHarLog)]);
 
+      // Create an URL for the BLOB object
       const url = URL.createObjectURL(harBLOB);
 
+      // Download using chrome.downloads API
       chrome.downloads.download({
         url: url,
         filename: Date.now() + "har",

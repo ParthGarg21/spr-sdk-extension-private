@@ -1,5 +1,8 @@
+// Component that renders a graph containing CPU usage statistics
+
 import CPU from "./CPU";
-const CPUGraph = () => {
+
+function CPUGraph() {
   return (
     <div className="lineChart">
       <div className="chartContainer">
@@ -7,6 +10,6 @@ const CPUGraph = () => {
       </div>
     </div>
   );
-};
+}
 
 export default CPUGraph;

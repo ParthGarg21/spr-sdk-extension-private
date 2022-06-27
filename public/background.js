@@ -1,6 +1,8 @@
-function cpuStats(tabID) {
-  // Callback to get the cpu stats
+// Background script
 
+function cpuStats(tabID) {
+
+  // Callback to get the cpu stats
   function getCpuStats(info) {
     // Getting info about the different CPU processors
     const processors = info.processors;
@@ -23,7 +25,7 @@ function cpuStats(tabID) {
       cpu: cpu,
     };
 
-    // Sending message back to the content script with the CPU data
+    // Send message back to the content script with the CPU data
     chrome.tabs.sendMessage(tabID, data);
   }
 
@@ -31,10 +33,11 @@ function cpuStats(tabID) {
   chrome.system.cpu.getInfo(getCpuStats);
 }
 
+
 // Recieving a message from the content script to get the CPU stats
 chrome.runtime.onMessage.addListener(function (message, sender) {
   if (message === "cpu-sdk") {
-    // Invoking the function to get the cpu stats
+    // If the message is to get the cpu stats, invoke the function to get the cpu stats
     cpuStats(sender.tab.id);
   } else if (message === "get-har") {
     // Sending the message to the devtools to get the har

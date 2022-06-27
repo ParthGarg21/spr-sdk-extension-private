@@ -1,5 +1,8 @@
+// Component that renders the network latency graph
+
 import LineChart from "./LineGraph";
-const NetworkGraph = () => {
+
+function NetworkGraph() {
   return (
     <div className="lineChart">
       <div className="networkContainer">
@@ -7,6 +10,6 @@ const NetworkGraph = () => {
       </div>
     </div>
   );
-};
+}
 
 export default NetworkGraph;

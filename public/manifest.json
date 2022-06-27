@@ -18,7 +18,7 @@
     }
   },
 
-  "permissions": ["activeTab", "system.cpu", "tabs", "debugger", "downloads"],
+  "permissions": ["activeTab", "system.cpu", "tabs", "downloads"],
 
   "content_scripts": [
     {
