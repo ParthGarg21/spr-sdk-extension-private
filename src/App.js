@@ -1,4 +1,4 @@
-// Compoent that renders the main UI of the extension
+// Component that renders the main pop up of the extension
 
 import { VscGraphLine } from "react-icons/vsc";
 import { TbNetwork } from "react-icons/tb";
