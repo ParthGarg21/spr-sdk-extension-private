@@ -19,7 +19,7 @@ import Feature from "./components/Feature";
 import PrintSummary from "./components/PrintSummary";
 import Copy from "./components/Copy";
 
-function App() {
+const App = () => {
   return (
     <div className="wrapper">
       <div className="title-container">
@@ -77,6 +77,6 @@ function App() {
       </div>
     </div>
   );
-}
+};
 
 export default App;

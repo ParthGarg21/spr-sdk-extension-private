@@ -5,19 +5,19 @@
 import { useState, useEffect } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
-function Copy() {
+const Copy = () => {
   const [summary, setSummary] = useState("");
 
   // Function to send a message to the content script to get the summary
-  function sendMessage() {
+  const sendMessage = () => {
     // Send message to the content script by getting the current active tab
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const tabId = tabs[0].id;
       chrome.tabs.sendMessage(tabId, "copy");
     });
 
     // Function to listen to the incoming message containing summary
-    function listener(message) {
+    const listener = (message) => {
       // If we get the desired message from the content script, then update the summary
       if (message.text === "summary") {
         // removing the listener to avoid unwanted redundant and repeated listening listening
@@ -25,10 +25,10 @@ function Copy() {
 
         setSummary(message.summary);
       }
-    }
+    };
     // Sending the message to the get the summary
     chrome.runtime.onMessage.addListener(listener);
-  }
+  };
 
   // When the component gets first rendered, send message to the content script
   useEffect(sendMessage, []);
@@ -42,6 +42,6 @@ function Copy() {
       </CopyToClipboard>
     </div>
   );
-}
+};
 
 export default Copy;

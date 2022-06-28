@@ -4,13 +4,13 @@
 /*global chrome*/
 import { useState } from "react";
 
-function Profiling() {
+const Profiling = () => {
   // States for the input fields
   const [name, setName] = useState("");
   const [time, setTime] = useState("");
 
   // Function that triggers on button click and sends message to the content script to start profiling
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     // Time input that the user sets
@@ -26,7 +26,7 @@ function Profiling() {
     };
 
     // Send message to the content script by getting the current active tab
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const tabId = tabs[0].id;
 
       // Send message to the content script to start profiling
@@ -36,7 +36,7 @@ function Profiling() {
     // Clear the input fields
     setName("");
     setTime("");
-  }
+  };
 
   return (
     <div className="profileContainer">
@@ -45,7 +45,7 @@ function Profiling() {
           placeholder="Enter profile name"
           className="inputField"
           value={name}
-          onChange={function (e) {
+          onChange={(e) => {
             setName(e.target.value);
           }}
         ></input>
@@ -54,7 +54,7 @@ function Profiling() {
           placeholder="Enter the time interval for profiling in ms (default is 15 sec)"
           className="inputField"
           value={time}
-          onChange={function (e) {
+          onChange={(e) => {
             setTime(e.target.value);
           }}
         ></input>
@@ -65,6 +65,6 @@ function Profiling() {
       </form>
     </div>
   );
-}
+};
 
 export default Profiling;

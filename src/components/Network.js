@@ -7,9 +7,9 @@
 
 import { useState, useEffect } from "react";
 
-function Network() {
+const Network = () => {
   // Function to further shorten the URL
-  function summarizeURL(url) {
+  const summarizeURL = (url) => {
     let i = url.length - 1,
       j = url.length;
     while (i >= 0) {
@@ -22,10 +22,10 @@ function Network() {
     }
 
     return url.substring(i, j);
-  }
+  };
 
   // Function to render a single network request as a table row
-  function singleRequest(request, idx) {
+  const singleRequest = (request, idx) => {
     const requestedURL = request.shortURL;
     const timeTaken = request.timeTaken;
     const reqType = request.reqType;
@@ -46,32 +46,32 @@ function Network() {
         <td className="num td last">{initiatorType}</td>
       </tr>
     );
-  }
+  };
 
   // State to store the network summary
   const [summary, setSummary] = useState([]);
 
   // Function to send a message to the content script to get the network calls stats
-  function sendMessage() {
+  const sendMessage = () => {
     // Send message to the content script by getting the current active tab
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const tabId = tabs[0].id;
       chrome.tabs.sendMessage(tabId, "network");
     });
 
     // Function to listen to the incoming message containing network info
-    function listener(message) {
+    const listener = (message) => {
       // If we get the desired message from the content script, then we update the network summary
       if (message.text === "network") {
         // Remove listener to avoid unwanted redundant and repeated listening
         chrome.runtime.onMessage.removeListener(listener);
         setSummary(message.network);
       }
-    }
+    };
 
     // Recieve message from the content script to get the network stats
     chrome.runtime.onMessage.addListener(listener);
-  }
+  };
 
   // When the component renders, send message to the content script
   useEffect(sendMessage, []);
@@ -98,6 +98,6 @@ function Network() {
       </table>
     </div>
   );
-}
+};
 
 export default Network;

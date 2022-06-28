@@ -8,9 +8,9 @@ import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 
-function LineChart() {
+const LineChart = () => {
   // Function to get the current time for X-axis label of the graph
-  function getTime(isInitial) {
+  const getTime = (isInitial) => {
     // isInitial is a boolean value that prevents buggy rendering of the graph
 
     const date = new Date();
@@ -31,7 +31,7 @@ function LineChart() {
     }
 
     return strTime;
-  }
+  };
 
   // Dummy data for the graph
   const yDummy = [];
@@ -51,9 +51,9 @@ function LineChart() {
   const url = "https://jsonplaceholder.typicode.com/posts";
 
   // Function to get a single entry for the graph by fetching data from the API, and then calculate its round trip duration
-  function fillGraph() {
+  const fillGraph = () => {
     // Main asynchronous function that calculates the round trip time.
-    async function getRoundTripTime() {
+    const getRoundTripTime = async () => {
       const res = await fetch(url);
       const data = await res.json();
 
@@ -86,10 +86,10 @@ function LineChart() {
       if (req.length === 245) {
         performance.clearResourceTimings();
       }
-    }
+    };
 
     getRoundTripTime();
-  }
+  };
 
   // Data options for the Graph
   const data = {
@@ -169,19 +169,19 @@ function LineChart() {
   };
 
   // Call fillGraph function to fill the data at regular intervals of 1 second
-  function handleInterval() {
+  const handleInterval = () => {
     const interval = setInterval(fillGraph, 1000);
 
     // To prevent the fetch request from executing twice
     return function stopTimer() {
       clearInterval(interval);
     };
-  }
+  };
 
   // When the component renders, start filling the graph
   useEffect(handleInterval, []);
 
   return <Line data={data} options={options} />;
-}
+};
 
 export default LineChart;

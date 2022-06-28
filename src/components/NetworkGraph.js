@@ -2,7 +2,7 @@
 
 import LineChart from "./LineGraph";
 
-function NetworkGraph() {
+const NetworkGraph = () => {
   return (
     <div className="lineChart">
       <div className="networkContainer">
@@ -10,6 +10,6 @@ function NetworkGraph() {
       </div>
     </div>
   );
-}
+};
 
 export default NetworkGraph;

@@ -7,14 +7,14 @@ import { useState } from "react";
 import { MdOutlineExpandLess } from "react-icons/md";
 import { MdOutlineExpandMore } from "react-icons/md";
 
-function Feature(props) {
+const Feature = (props) => {
   // Setup state to expand and contract the feature
   const [expandFeature, setExpandFeature] = useState(false);
 
   // Function to expand and contract a feature
-  function expand() {
+  const expand = () => {
     setExpandFeature(!expandFeature);
-  }
+  };
 
   return (
     <>
@@ -40,6 +40,6 @@ function Feature(props) {
       {expandFeature ? <props.feature></props.feature> : <></>}
     </>
   );
-}
+};
 
 export default Feature;

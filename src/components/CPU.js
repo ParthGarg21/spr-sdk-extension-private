@@ -9,10 +9,10 @@ import { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 
-function CPU() {
+const CPU = () => {
   // Function to send a message to the sdk to get the cpu stats
 
-  function getTime(isInitial) {
+  const getTime = (isInitial) => {
     // isInitial is a boolean value that prevents buggy rendering of the graph
 
     const date = new Date();
@@ -33,7 +33,7 @@ function CPU() {
     }
 
     return strTime;
-  }
+  };
 
   // Dummy data for the graph
   const yDummy = [];
@@ -50,9 +50,9 @@ function CPU() {
   const [yData, setYData] = useState([...yDummy]);
 
   // Function to send message to the content script to get the cpu usage at a particular time
-  function sendMessage() {
+  const sendMessage = () => {
     // Send message to the content script by getting the current active tab
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const tabId = tabs[0].id;
 
       //Send the message to the content script to get the cpu usage stats
@@ -60,7 +60,7 @@ function CPU() {
     });
 
     // Function to listen to the incoming message containing cpu usage info
-    function listener(message) {
+    const listener = (message) => {
       // If we get the desired message from the content script, then update the cpu usage data
       if (message.text === "cpu") {
         // Remove listener to avoid unwanted redundant and repeated listening
@@ -77,11 +77,11 @@ function CPU() {
         setXData([...xData]);
         setYData([...yData]);
       }
-    }
+    };
 
     // Recieve message from the content script to get the cpu stats
     chrome.runtime.onMessage.addListener(listener);
-  }
+  };
 
   // Data options for the Graph
   const data = {
@@ -161,19 +161,19 @@ function CPU() {
   };
 
   // Call sendMessage function to fill the data at regular intervals of 1 second
-  function handleInterval() {
+  const handleInterval = () => {
     const id = setInterval(sendMessage, 1000);
 
     // To prevent sendMessage to function twice
     return function stopTimer() {
       clearInterval(id);
     };
-  }
+  };
 
   // When the component renders, start filling the graph
   useEffect(handleInterval, []);
 
   return <Line data={data} options={options} />;
-}
+};
 
 export default CPU;

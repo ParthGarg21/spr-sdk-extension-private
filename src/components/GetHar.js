@@ -2,15 +2,15 @@
 // by communicating with the content script
 
 /*global chrome*/
-function GetHar() {
+const GetHar = () => {
   // Function that triggers on button click and communicates with the content script
-  function downloadHar() {
+  const downloadHar = () => {
     // Send message to the content script to download the HAR file
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const tabId = tabs[0].id;
       chrome.tabs.sendMessage(tabId, "har");
     });
-  }
+  };
 
   return (
     <div className="getHarContainer">
@@ -23,6 +23,6 @@ function GetHar() {
       </button>
     </div>
   );
-}
+};
 
 export default GetHar;

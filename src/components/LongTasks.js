@@ -7,9 +7,9 @@
 
 import { useState, useEffect } from "react";
 
-function LongTasks() {
+const LongTasks = () => {
   // Function to render a single long task as a table row
-  function singleTask(task, id) {
+  const singleTask = (task, id) => {
     const name = task.name;
     const timeTaken = task.duration + "ms";
 
@@ -19,32 +19,32 @@ function LongTasks() {
         <td className="td last lt-td">{timeTaken}</td>
       </tr>
     );
-  }
+  };
 
   // State to store the long tasks summary
   const [summary, setSummary] = useState([]);
 
   // Function to send a message to the content script to get the long tasks stats
-  function sendMessage() {
+  const sendMessage = () => {
     // Send message to the content script by getting the current active tab
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const tabId = tabs[0].id;
       chrome.tabs.sendMessage(tabId, "longtasks");
     });
 
     // Function to listen to the incoming message containing long task info
-    function listener(message) {
+    const listener = (message) => {
       // If we get the desired message from the content script, then update the long tasks summary
       if (message.text === "longtasks") {
         // Remove listener to avoid unwanted redundant and repeated listening
         chrome.runtime.onMessage.removeListener(listener);
         setSummary(message.longtasks);
       }
-    }
+    };
 
     // Recieve message from the content script to get the long tasks stats
     chrome.runtime.onMessage.addListener(listener);
-  }
+  };
 
   // When the component renders, send message to the content script
   useEffect(sendMessage, []);
@@ -66,6 +66,6 @@ function LongTasks() {
       </table>
     </div>
   );
-}
+};
 
 export default LongTasks;
