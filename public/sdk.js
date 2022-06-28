@@ -217,7 +217,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const usedDiff = Math.abs(currUsed - prevUsed);
     const totalDiff = Math.abs(currTotal - prevTotal);
 
-    // CPU usafge
+    // CPU usage
     const cpu = (usedDiff / totalDiff) * 100;
 
     prevTotal = currTotal;

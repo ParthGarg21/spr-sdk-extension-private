@@ -65,7 +65,7 @@ const CPU = () => {
       if (message.text === "cpu") {
         // Remove listener to avoid unwanted redundant and repeated listening
         chrome.runtime.onMessage.removeListener(listener);
-        const cpuUsage = message.data === undefined ? 0 : Math.ceil(message.cpu);
+        const cpuUsage = Math.ceil(message.data);
 
         xData.shift();
         yData.shift();
