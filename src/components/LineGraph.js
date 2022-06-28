@@ -9,7 +9,7 @@ import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 
 function LineChart() {
-  // Function to get the current time for x-axis label of the graph
+  // Function to get the current time for X-axis label of the graph
   function getTime(isInitial) {
     // isInitial is a boolean value that prevents buggy rendering of the graph
 
@@ -52,9 +52,7 @@ function LineChart() {
 
   // Function to get a single entry for the graph by fetching data from the API, and then calculate its round trip duration
   function fillGraph() {
-    // Emptying the buffer once its max size is reached
-
-    // Main asynchronous function that will calculate the round trip time.
+    // Main asynchronous function that calculates the round trip time.
     async function getRoundTripTime() {
       const res = await fetch(url);
       const data = await res.json();
@@ -95,7 +93,7 @@ function LineChart() {
 
   // Data options for the Graph
   const data = {
-    // Using map function to fill the x-axis data
+    // Map function to fill the X-axis data
     labels: xData.map(function (value) {
       return value;
     }),
@@ -104,7 +102,7 @@ function LineChart() {
       {
         label: "Network Latency in milliseconds",
 
-        // Using map function to fill the y-axis data
+        // Map function to fill the Y-axis data
         data: yData.map(function (value) {
           return value;
         }),
@@ -159,7 +157,7 @@ function LineChart() {
           text: "Network Latency in milliseconds",
         },
 
-        // Maximum and minimium number of readings on the X AXIS
+        // Maximum and minimium number of readings on the Y AXIS
         min: 0,
         max: 600,
 
@@ -170,7 +168,7 @@ function LineChart() {
     },
   };
 
-  // Making continuous calls to the fillGraph function to fill the data at regular intervals of 1 second
+  // Call fillGraph function to fill the data at regular intervals of 1 second
   function handleInterval() {
     const interval = setInterval(fillGraph, 1000);
 
@@ -180,12 +178,10 @@ function LineChart() {
     };
   }
 
-  // when the component first renders, start filling the graph
+  // When the component renders, start filling the graph
   useEffect(handleInterval, []);
 
   return <Line data={data} options={options} />;
 }
 
 export default LineChart;
-
-// Network Throttling Works only while the chrome dev tools is active
