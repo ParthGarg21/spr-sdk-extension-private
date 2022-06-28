@@ -1,5 +1,7 @@
 // Compoent that renders the main UI of the extension
 
+/*global chrome*/
+
 import { VscGraphLine } from "react-icons/vsc";
 import { TbNetwork } from "react-icons/tb";
 import { GrMemory } from "react-icons/gr";
@@ -17,14 +19,23 @@ import Profiling from "./components/Profiling";
 import GetHar from "./components/GetHar";
 import Feature from "./components/Feature";
 import PrintSummary from "./components/PrintSummary";
-import Copy from "./components/Copy";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { useEffect, useState } from "react";
 
 function App() {
+  
+
   return (
     <div className="wrapper">
       <div className="title-container">
-        <img src="/logo.png" alt="Sprinklr logo" className="logo" />
-        <h1 className="title">Sprinklr SDK Extension</h1>
+        
+        <div className="logo-con">
+          <img src="/logo.png" alt="Sprinklr logo" className="logo" />
+          <h1 className="title">Sprinklr SDK Extension</h1>
+        </div>
+
+       
+
       </div>
       <div className="main-container">
         <div className="features-con">
@@ -67,11 +78,6 @@ function App() {
             icon={VscOutput}
             feature={PrintSummary}
             title="Print Summary on the console"
-          ></Feature>
-          <Feature
-            icon={MdContentCopy}
-            feature={Copy}
-            title="Copy summary to clipboard"
           ></Feature>
         </div>
       </div>
