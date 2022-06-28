@@ -201,10 +201,9 @@ let prevUsed = 0;
 let prevTotal = 0;
 
 // Receive messages
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.text === "profile") {
     // If the message recieved is 'profile', then start profiling
-    console.log(message);
     sdk.startProfiling(message.profileName, message.time);
   } else if (message === "cpu-app") {
     // send message to the background script to get the cpu-usage on recieving a message from the app
@@ -233,15 +232,12 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     sendCPU(data);
   } else if (message === "network") {
     // If the message is to get the network stats, then send the network stats to the App
-    console.log("got network req");
     sendNetworkStats();
   } else if (message === "memory") {
     // If the message is to get the memory stats, then send the memory stats to the App
-    console.log("got memory req");
     sendMemoryStats();
   } else if (message == "longtasks") {
     // If the message is to get the long tasks stats, then send the long task stats to the App
-    console.log("got long task req");
     sendLongTasks();
   } else if (message === "har") {
     // If the message is to download the HAR file, then send message to the background script to download the HAR
@@ -256,7 +252,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 });
 
 // Function to send the memory stats
-function sendMemoryStats() {
+const sendMemoryStats = () => {
   const memory = sdk.getMemoryStats();
   const data = {
     text: "memory",
@@ -264,10 +260,10 @@ function sendMemoryStats() {
   };
 
   chrome.runtime.sendMessage(data);
-}
+};
 
 // Function to send the network stats
-function sendNetworkStats() {
+const sendNetworkStats = () => {
   const network = sdk.getNetworkStats(0);
   const data = {
     text: "network",
@@ -275,10 +271,10 @@ function sendNetworkStats() {
   };
 
   chrome.runtime.sendMessage(data);
-}
+};
 
 // Function to send the long tasks stats
-function sendLongTasks() {
+const sendLongTasks = () => {
   const longtasks = sdk.getLongTasks();
   const data = {
     text: "longtasks",
@@ -286,15 +282,15 @@ function sendLongTasks() {
   };
 
   chrome.runtime.sendMessage(data);
-}
+};
 
 // Function to send the cpu usage stats
-function sendCPU(data) {
+const sendCPU = (data) => {
   chrome.runtime.sendMessage(data);
-}
+};
 
 // Function to send the summary to the APP as JSON
-function sendSummaryAsJSON() {
+const sendSummaryAsJSON = () => {
   const memorySummary = sdk.getMemoryStats();
   const networkSummary = sdk.getNetworkStats(0);
   const longTaskSummary = sdk.getLongTasks();
@@ -311,4 +307,4 @@ function sendSummaryAsJSON() {
   };
 
   chrome.runtime.sendMessage(data);
-}
+};

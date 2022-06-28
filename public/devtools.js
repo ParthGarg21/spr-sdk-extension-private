@@ -4,10 +4,10 @@
 /*global chrome*/
 
 // Function to receive a message from the bg script to download the HAR file
-chrome.runtime.onMessage.addListener(function (message) {
+chrome.runtime.onMessage.addListener((message) => {
   if (message === "get-har-bg") {
     // Function to get the HAR file
-    chrome.devtools.network.getHAR(function (har) {
+    chrome.devtools.network.getHAR((har) => {
       const updatedHarLog = {};
       updatedHarLog.log = har;
 

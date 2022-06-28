@@ -1,6 +1,6 @@
 // Background script
 
-function cpuStats(tabID) {
+const cpuStats = (tabID) => {
   // Callback to get the cpu stats
   function getCpuStats(info) {
     // Get info about the different CPU processors
@@ -30,7 +30,7 @@ function cpuStats(tabID) {
 
   // Getting the cpu usage data
   chrome.system.cpu.getInfo(getCpuStats);
-}
+};
 
 // Receive messages
 chrome.runtime.onMessage.addListener(function (message, sender) {
