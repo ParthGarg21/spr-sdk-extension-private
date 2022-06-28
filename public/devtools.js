@@ -1,12 +1,13 @@
-// Devtools script. Gets activated only when the developer tools are open
+// Devtools script
+// Gets activated only when the developer tools are open
 
 /*global chrome*/
 
-// function to recieve a message from the bg script to download the HAR file
-chrome.runtime.onMessage.addListener(function (message) {
+// Function to receive a message from the bg script to download the HAR file
+chrome.runtime.onMessage.addListener((message) => {
   if (message === "get-har-bg") {
-    // function to get the HAR file
-    chrome.devtools.network.getHAR(function (har) {
+    // Function to get the HAR file
+    chrome.devtools.network.getHAR((har) => {
       const updatedHarLog = {};
       updatedHarLog.log = har;
 

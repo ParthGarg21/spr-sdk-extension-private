@@ -17,7 +17,7 @@ body {
 
 .wrapper {
   width: 500px;
-  height: 560px;
+  height: 420px;
   overflow-y: auto;
 }
 
@@ -27,7 +27,7 @@ body {
 
 .title-container {
   height: 70px;
-  width: 100%;
+  width: 500px;
   display: flex;
   font-weight: 800;
   box-shadow: rgb(0 0 0 / 11%) 0px 2px 30px 0px;
@@ -36,20 +36,33 @@ body {
 .logo {
   height: 50px;
   width: 50px;
-  margin-right: 1rem;
+  margin: 0 .5rem;
 }
 
 .logo-con {
   display: flex;
-  border: 2px solid;
+  width: 85%;
   align-items: center;
-  width: 60%;
-  height: 100%;
+  justify-content: start;
 }
 
 .copy-con {
-  width: 40%;
-  height: 100%;
+  display: flex;
+  width: 15%;
+  align-items: center;
+  justify-content: center;
+}
+
+.copy-icn {
+  font-size: 1.75rem;
+  cursor: pointer;
+  color: #959595;
+  transition: all;
+  transition-duration: 0.25s;
+}
+
+.copy-icn:hover {
+  color: #000;
 }
 
 .feature {
@@ -60,7 +73,7 @@ body {
 }
 
 .feature-title {
-  width: 70%;
+  width: 65%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -68,13 +81,32 @@ body {
   font-weight: 500;
 }
 
-.icn-con,
-.exp-icn-con {
+.icn-con {
   font-size: 2rem;
   width: 15%;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.refresh-icn {
+  cursor: pointer;
+  color: #959595;
+  transition: all;
+  transition-duration: 0.25s;
+}
+
+.refresh-icn:hover {
+  color: #000;
+}
+
+
+.exp-icn-con {
+  font-size: 2rem;
+  width: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
 }
 
 .icn-con {
@@ -297,8 +329,7 @@ body {
   width: 130px;
 }
 
-.print-con,
-.copy-con {
+.print-con {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -307,8 +338,7 @@ body {
   border-bottom: 1.5px solid rgb(195, 195, 195);
 }
 
-.print-heading,
-.copy-heading {
+.print-heading {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -320,7 +350,6 @@ body {
   padding: .5rem 0;
 }
 
-.print-btn,
-.copy-btn {
+.print-btn {
   width: 200px;
 }

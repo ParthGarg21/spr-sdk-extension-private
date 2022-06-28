@@ -2,7 +2,7 @@
 
 import CPU from "./CPU";
 
-function CPUGraph() {
+const CPUGraph = () => {
   return (
     <div className="lineChart">
       <div className="chartContainer">
@@ -10,6 +10,6 @@ function CPUGraph() {
       </div>
     </div>
   );
-}
+};
 
 export default CPUGraph;

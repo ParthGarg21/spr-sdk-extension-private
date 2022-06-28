@@ -4,17 +4,20 @@
  */
 
 import { useState } from "react";
-import { MdOutlineExpandLess } from "react-icons/md";
-import { MdOutlineExpandMore } from "react-icons/md";
+import {
+  MdOutlineExpandLess,
+  MdOutlineExpandMore,
+  MdOutlineRefresh,
+} from "react-icons/md";
 
-function Feature(props) {
+const Feature = (props) => {
   // Setup state to expand and contract the feature
   const [expandFeature, setExpandFeature] = useState(false);
 
   // Function to expand and contract a feature
-  function expand() {
+  const expand = () => {
     setExpandFeature(!expandFeature);
-  }
+  };
 
   return (
     <>
@@ -24,6 +27,16 @@ function Feature(props) {
         </div>
         <h3 className="feature-title">{props.title}</h3>
         <div className="exp-icn-con">
+          {props.sendMessage !== undefined ? (
+            <MdOutlineRefresh
+              className="refresh-icn"
+              onClick={() => {
+                props.sendMessage(props.stat, props.setter)
+              }}
+            ></MdOutlineRefresh>
+          ) : (
+            <></>
+          )}
           {!expandFeature ? (
             <MdOutlineExpandMore
               className="exp-icn"
@@ -37,9 +50,18 @@ function Feature(props) {
           )}
         </div>
       </div>
-      {expandFeature ? <props.feature></props.feature> : <></>}
+      {expandFeature ? (
+        <props.feature
+          summary={props.summary}
+          sendMessage={props.sendMessage}
+          stat={props.stat}
+          setter={props.setter}
+        ></props.feature>
+      ) : (
+        <></>
+      )}
     </>
   );
-}
+};
 
 export default Feature;

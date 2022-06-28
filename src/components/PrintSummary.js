@@ -2,13 +2,13 @@
 
 /*global chrome*/
 
-function PrintSummary() {
-  function sendMessage() {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+const PrintSummary = () => {
+  const sendMessage = () => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const tabId = tabs[0].id;
       chrome.tabs.sendMessage(tabId, "print");
     });
-  }
+  };
   return (
     <div className="print-con">
       <h3 className="print-heading">
@@ -19,6 +19,6 @@ function PrintSummary() {
       </button>
     </div>
   );
-}
+};
 
 export default PrintSummary;

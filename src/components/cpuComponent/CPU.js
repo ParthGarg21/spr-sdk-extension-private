@@ -1,6 +1,6 @@
 /**
  * Component that renders and builds the Line Graph depicting CPU usage
- * by communicaring with the content script on regular intervals
+ * by communicating with the content script on regular intervals
  **/
 
 /*global chrome*/
@@ -9,10 +9,10 @@ import { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 
-function CPU() {
-  // function to send a message to the sdk to get the cpu stats
+const CPU = () => {
+  // Function to send a message to the sdk to get the cpu stats
 
-  function getTime(isInitial) {
+  const getTime = (isInitial) => {
     // isInitial is a boolean value that prevents buggy rendering of the graph
 
     const date = new Date();
@@ -33,13 +33,13 @@ function CPU() {
     }
 
     return strTime;
-  }
+  };
 
   // Dummy data for the graph
   const yDummy = [];
   const xDummy = [];
 
-  // Filling the dummy data inside the dummy arrays
+  // Fill the dummy data inside the dummy arrays
   for (let i = 0; i < 240; i++) {
     xDummy.push(getTime(true));
     yDummy.push(undefined);
@@ -50,22 +50,22 @@ function CPU() {
   const [yData, setYData] = useState([...yDummy]);
 
   // Function to send message to the content script to get the cpu usage at a particular time
-  function sendMessage() {
+  const sendMessage = () => {
     // Send message to the content script by getting the current active tab
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const tabId = tabs[0].id;
 
-      //Send the message to the cocntent to get the cpu stats
+      //Send the message to the content script to get the cpu usage stats
       chrome.tabs.sendMessage(tabId, "cpu-app");
     });
 
-    // Function to listen to the incoming message containint network info
-    function listener(message) {
-      // If we get the desired message from the content script, then update the memory summay
+    // Function to listen to the incoming message containing cpu usage info
+    const listener = (message) => {
+      // If we get the desired message from the content script, then update the cpu usage data
       if (message.text === "cpu") {
-        // removing the listener to avoid unwanted redundant and repeated listening listening
+        // Remove listener to avoid unwanted redundant and repeated listening
         chrome.runtime.onMessage.removeListener(listener);
-        const cpuUsage = message.cpu === undefined ? 0 : Math.ceil(message.cpu);
+        const cpuUsage = message.data === undefined ? 0 : Math.ceil(message.cpu);
 
         xData.shift();
         yData.shift();
@@ -73,19 +73,19 @@ function CPU() {
         xData.push(getTime(false));
         yData.push(cpuUsage);
 
-        // Setting the states.
+        // Set the states
         setXData([...xData]);
         setYData([...yData]);
       }
-    }
+    };
 
     // Recieve message from the content script to get the cpu stats
     chrome.runtime.onMessage.addListener(listener);
-  }
+  };
 
   // Data options for the Graph
   const data = {
-    // Using map function to fill the x-axis data
+    // Map function to fill the x-axis data
     labels: xData.map(function (value) {
       return value;
     }),
@@ -94,7 +94,7 @@ function CPU() {
       {
         label: "% CPU Usage",
 
-        // Using map function to fill the y-axis data
+        // Map function to fill the y-axis data
         data: yData.map(function (value) {
           return value;
         }),
@@ -105,7 +105,7 @@ function CPU() {
     ],
   };
 
-  // General config options for the graph.
+  // General config options for the graph
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -149,7 +149,7 @@ function CPU() {
           text: "CPU Usage in %",
         },
 
-        // Maximum and minimium number of readings on the X AXIS
+        // Maximum and minimium number of readings on the Y AXIS
         min: 0,
         max: 100,
 
@@ -160,20 +160,20 @@ function CPU() {
     },
   };
 
-  // Making continuous calls to the sendMessage function to fill the data at regular intervals of 1 second
-  function handleInterval() {
+  // Call sendMessage function to fill the data at regular intervals of 1 second
+  const handleInterval = () => {
     const id = setInterval(sendMessage, 1000);
 
-    // To prevent sendMessge twice
+    // To prevent sendMessage to function twice
     return function stopTimer() {
       clearInterval(id);
     };
-  }
+  };
 
-  // when the component first renders, start filling the graph
+  // When the component renders, start filling the graph
   useEffect(handleInterval, []);
 
   return <Line data={data} options={options} />;
-}
+};
 
 export default CPU;

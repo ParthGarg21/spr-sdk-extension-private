@@ -1,24 +1,24 @@
-// Component that allows the user to profile a website by communicating with the content script
+// Component that allows the user to profile the performance of a website
+// by communicating with the content script
 
 /*global chrome*/
 import { useState } from "react";
 
-function Profiling() {
+const Profiling = () => {
   // States for the input fields
   const [name, setName] = useState("");
   const [time, setTime] = useState("");
 
-  // function that will be triggered on button click and send message to the content script to start profiling
-  function handleSubmit(e) {
+  // Function that triggers on button click and sends message to the content script to start profiling
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Time input that the user set
-    const timing =
-      e.target[1].value !== "" ? e.target[1].value : 15000;
+    // Time input that the user sets
+    const timing = e.target[1].value !== "" ? e.target[1].value : 15000;
 
     console.log(timing);
 
-    // Data to be sent to the content script
+    // Data passed to the content script
     const data = {
       text: "profile",
       time: Number(timing),
@@ -26,18 +26,18 @@ function Profiling() {
     };
 
     // Send message to the content script by getting the current active tab
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const tabId = tabs[0].id;
 
-      //Sending the message to the content script to start profiling
+      // Send message to the content script to start profiling
       chrome.tabs.sendMessage(tabId, data);
     });
 
-    // Reseting the input fields
+    // Clear the input fields
     setName("");
     setTime("");
-  }
-  
+  };
+
   return (
     <div className="profileContainer">
       <form onSubmit={handleSubmit} className="formBox">
@@ -45,7 +45,7 @@ function Profiling() {
           placeholder="Enter profile name"
           className="inputField"
           value={name}
-          onChange={function (e) {
+          onChange={(e) => {
             setName(e.target.value);
           }}
         ></input>
@@ -54,7 +54,7 @@ function Profiling() {
           placeholder="Enter the time interval for profiling in ms (default is 15 sec)"
           className="inputField"
           value={time}
-          onChange={function (e) {
+          onChange={(e) => {
             setTime(e.target.value);
           }}
         ></input>
@@ -65,6 +65,6 @@ function Profiling() {
       </form>
     </div>
   );
-}
+};
 
 export default Profiling;

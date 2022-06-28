@@ -1,15 +1,15 @@
 /**
- * Component that renders the network calls statistics by communicating with the content script.
- * Whenever the component is rendered, the fresh summary is generated.
+ * Component that renders the network call statistics by communicating with the content script.
+ * As soon as the component renders, a fresh summary of the latest calls is generated.
  */
 
 /*global chrome*/
 
 import { useState, useEffect } from "react";
 
-function Network() {
+const Network = ({ summary, sendMessage, stat, setter }) => {
   // Function to further shorten the URL
-  function summarizeURL(url) {
+  const summarizeURL = (url) => {
     let i = url.length - 1,
       j = url.length;
     while (i >= 0) {
@@ -22,17 +22,17 @@ function Network() {
     }
 
     return url.substring(i, j);
-  }
+  };
 
   // Function to render a single network request as a table row
-  function singleRequest(request, idx) {
+  const singleRequest = (request, idx) => {
     const requestedURL = request.shortURL;
     const timeTaken = request.timeTaken;
     const reqType = request.reqType;
     const ttfb = request.ttfb;
     const initiatorType = request.initiatorType;
 
-    // Even shorter URL
+    // Shorten URL for non-fetched URL's
     const summarizedURL = summarizeURL(requestedURL);
 
     return (
@@ -46,39 +46,14 @@ function Network() {
         <td className="num td last">{initiatorType}</td>
       </tr>
     );
-  }
+  };
 
-  // State to store the network summary
-  const [summary, setSummary] = useState([]);
+  // When the component renders, send message to the content script
+  useEffect(() => {
+    sendMessage(stat, setter);
+  }, []);
 
-  // Function to send a message to the content script to get the network calls stats
-  function sendMessage() {
-    // Send message to the content script by getting the current active tab
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      const tabId = tabs[0].id;
-      chrome.tabs.sendMessage(tabId, "network");
-    });
-
-    // Function to listen to the incoming message containing network info
-    function listener(message) {
-      // If we get the desired message from the content script, then update the memory summay
-      if (message.text === "network") {
-        // removing the listener to avoid unwanted redundant and repeated listening listening
-        chrome.runtime.onMessage.removeListener(listener);
-
-        console.log("n");
-        setSummary(message.network);
-      }
-    }
-
-    // Recieve message from the content script to get the memory stats
-    chrome.runtime.onMessage.addListener(listener);
-  }
-
-  // When the component gets first rendered, send message to the content script
-  useEffect(sendMessage, []);
-
-  // Render the summary that we get
+  // Render the network summary that we get
   return (
     <div className="summary tableContainer">
       <table className="table">
@@ -92,7 +67,7 @@ function Network() {
           </tr>
         </thead>
         <tbody className="tbody">
-          {/* Map on all the network requests and then render each network request as a table */}
+          {/* Map on all the network requests and then render each network request as a table row */}
           {summary.map(function (request, idx) {
             return singleRequest(request, idx);
           })}
@@ -100,6 +75,6 @@ function Network() {
       </table>
     </div>
   );
-}
+};
 
 export default Network;

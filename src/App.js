@@ -1,4 +1,4 @@
-// Compoent that renders the main UI of the extension
+// Component that renders the main pop up of the extension
 
 /*global chrome*/
 
@@ -10,11 +10,11 @@ import { BsCpuFill } from "react-icons/bs";
 import { VscDebugContinue, VscOutput } from "react-icons/vsc";
 import { TbWorldDownload } from "react-icons/tb";
 import { MdContentCopy } from "react-icons/md";
-import NetworkGraph from "./components/NetworkGraph";
+import NetworkGraph from "./components/NetworkGraphComponent/NetworkGraph";
 import Network from "./components/Network";
 import Memory from "./components/Memory";
 import LongTasks from "./components/LongTasks";
-import CPUGraph from "./components/CPUGraph";
+import CPUGraph from "./components/cpuComponent/CPUGraph";
 import Profiling from "./components/Profiling";
 import GetHar from "./components/GetHar";
 import Feature from "./components/Feature";
@@ -22,20 +22,65 @@ import PrintSummary from "./components/PrintSummary";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useEffect, useState } from "react";
 
-function App() {
-  
+const App = () => {
+  // State to store the text to be copied
+  const [copy, setCopy] = useState("");
+
+  // State to store the text to be copied
+  const [memory, setMemory] = useState({});
+
+  // State to store the text to be copied
+  const [network, setNetwork] = useState([]);
+
+  // State to store the text to be copied
+  const [longTasks, setLongTasks] = useState([]);
+
+  // Function to send a message to the content script to get a particular type of summary
+  const sendMessage = (stat, setter) => {
+    // Send message to the content script by getting the current active tab
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const tabId = tabs[0].id;
+      chrome.tabs.sendMessage(tabId, stat);
+    });
+
+    // Function to listen to the incoming message containing the dessired info
+    const listener = (message) => {
+      // If we get the desired message from the content script, then we update the dessired state
+      if (message.text === stat) {
+        // Remove listener to avoid unwanted redundant and repeated listening
+        chrome.runtime.onMessage.removeListener(listener);
+        setter(message.data);
+      }
+    };
+
+    // Recieve message from the content script to get the desired stats
+    chrome.runtime.onMessage.addListener(listener);
+  };
+
+  // Initially setting up the copy text when the extension renders
+  useEffect(function () {
+    sendMessage("copy", setCopy);
+  }, []);
+
+  console.log(memory);
 
   return (
     <div className="wrapper">
       <div className="title-container">
-        
         <div className="logo-con">
           <img src="/logo.png" alt="Sprinklr logo" className="logo" />
           <h1 className="title">Sprinklr SDK Extension</h1>
         </div>
-
-       
-
+        <div className="copy-con">
+          <CopyToClipboard text={copy}>
+            <MdContentCopy
+              onClick={() => {
+                sendMessage("copy", setCopy);
+              }}
+              className="copy-icn"
+            ></MdContentCopy>
+          </CopyToClipboard>
+        </div>
       </div>
       <div className="main-container">
         <div className="features-con">
@@ -43,16 +88,29 @@ function App() {
             icon={TbNetwork}
             feature={Network}
             title="Network Calls Statistics"
+            sendMessage={sendMessage}
+            summary={network}
+            setter={setNetwork}
+            stat={"network"}
           ></Feature>
           <Feature
             icon={GrMemory}
             feature={Memory}
             title="Memory Statistics"
+            sendMessage={sendMessage}
+            summary={memory}
+            setter={setMemory}
+            stat={"memory"}
           ></Feature>
+
           <Feature
             icon={CgPerformance}
             feature={LongTasks}
             title="Long Tasks Statistics"
+            sendMessage={sendMessage}
+            summary={longTasks}
+            setter={setLongTasks}
+            stat={"longtasks"}
           ></Feature>
           <Feature
             icon={BsCpuFill}
@@ -83,6 +141,6 @@ function App() {
       </div>
     </div>
   );
-}
+};
 
 export default App;
