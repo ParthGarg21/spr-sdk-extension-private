@@ -65,8 +65,6 @@ function Network() {
       if (message.text === "network") {
         // Remove listener to avoid unwanted redundant and repeated listening
         chrome.runtime.onMessage.removeListener(listener);
-
-        console.log("n");
         setSummary(message.network);
       }
     }

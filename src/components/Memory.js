@@ -25,8 +25,6 @@ function Memory() {
       if (message.text === "memory") {
         // Remove listener to avoid unwanted redundant and repeated listening
         chrome.runtime.onMessage.removeListener(listener);
-
-        console.log("m");
         setSummary(message.memory);
       }
     }
