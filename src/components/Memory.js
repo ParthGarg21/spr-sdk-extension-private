@@ -1,6 +1,6 @@
 /**
  * Component that renders the memory statistics by communicating with the content script.
- * Whenever the component is rendered, the fresh summary is generated.
+ * As soon as the component renders, a fresh summary of the latest calls is generated.
  */
 
 /*global chrome*/
@@ -21,9 +21,9 @@ function Memory() {
 
     // Function to listen to the incoming message containing memory info
     function listener(message) {
-      // If we get the desired message from the content script, then update the memory summay
+      // If we get the desired message from the content script, then update the memory summary
       if (message.text === "memory") {
-        // removing the listener to avoid unwanted redundant and repeated listening listening
+        // Remove listener to avoid unwanted redundant and repeated listening
         chrome.runtime.onMessage.removeListener(listener);
 
         console.log("m");
@@ -35,10 +35,10 @@ function Memory() {
     chrome.runtime.onMessage.addListener(listener);
   }
 
-  // When the component gets first rendered, send message to the content script
+  // When the component renders, send message to the content script
   useEffect(sendMessage, []);
 
-  // Extract summary from the memory summary that we get
+  // Extract the required information from the memory summary that we get
   const currentAllocatedMemoryHeap = summary.currentAllocatedMemoryHeap;
   const memoryHeapSizeLimit = summary.memoryHeapSizeLimit;
   const totalMemoryHeapUsed = summary.totalMemoryHeapUsed;

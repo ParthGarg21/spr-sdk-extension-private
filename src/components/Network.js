@@ -63,7 +63,7 @@ function Network() {
     function listener(message) {
       // If we get the desired message from the content script, then we update the network summary
       if (message.text === "network") {
-        //Remove listener to avoid unwanted redundant and repeated listening
+        // Remove listener to avoid unwanted redundant and repeated listening
         chrome.runtime.onMessage.removeListener(listener);
 
         console.log("n");
