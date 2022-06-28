@@ -12,7 +12,7 @@ import NetworkGraph from "./components/NetworkGraph";
 import Network from "./components/Network";
 import Memory from "./components/Memory";
 import LongTasks from "./components/LongTasks";
-import CPUGraph from "./components/CPUGraph";
+import CPUGraph from "./components/cpuComponent/CPUGraph";
 import Profiling from "./components/Profiling";
 import GetHar from "./components/GetHar";
 import Feature from "./components/Feature";
