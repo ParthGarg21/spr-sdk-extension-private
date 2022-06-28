@@ -1,8 +1,9 @@
-// Content script in the form of the customer debugging SDK
+// Content script
+
 class SprPerformanceMeasureSDK {
-  // method to get network statistics which take time greater than duration to complete
+  // Method to get network statistics which take time greater than 'duration' milliseconds to complete
   getNetworkStats(duration = 500) {
-    // if browser does not support window.performance, then we can't extract the network requests
+    // If browser does not support window.performance, then we can't extract the network requests
     if (
       window.performance === undefined ||
       window.performance.getEntriesByType === undefined
@@ -10,7 +11,7 @@ class SprPerformanceMeasureSDK {
       return "Network requests can't be extracted!";
     }
 
-    // function that shortens the requested URL of a network request and clips the domain name
+    //Function that shortens the requested URL of a network request and clips the domain name
     function shortenURL(url) {
       let count = 0;
 
@@ -25,10 +26,11 @@ class SprPerformanceMeasureSDK {
       }
     }
 
-    // array to store required resources
+    // Array to store required resources
     const extractedRequests = [];
 
-    // extract all the network requests. Gives an array of objects of network requests
+    // Extract all the network requests
+    // Gives an array of objects of network requests
     const allRequests = window.performance.getEntriesByType("resource");
 
     for (let i = 0; i < allRequests.length; i++) {
@@ -41,17 +43,17 @@ class SprPerformanceMeasureSDK {
         // Requested URL of the network request
         const requestedURL = request.name;
 
-        // time to first byte
+        // Time To First Byte (TTFB)
         const ttfb = request.responseStart - request.requestStart;
 
-        // Initiatorr type
+        // Initiator type
         const initiatorType = request.initiatorType;
 
-        // manually updating the request type to API if the initiator is fetch
+        // Manually update the request type to API if the initiator is fetch
         // because by default, the entryType of each request is 'resource'.
         const reqType = initiatorType === "fetch" ? "API" : request.entryType; // request type
 
-        // storing all request info into a request object
+        // Store all request info into a request object
         const req = {
           requestedURL: requestedURL,
           timeTaken: currDuration.toFixed(2) + "ms",
@@ -66,13 +68,13 @@ class SprPerformanceMeasureSDK {
       }
     }
 
-    // if the length of requested resources exceeds 245 then clear all the resources
+    // If the length of requested resources exceeds 245 then clear all the resources
     // as the network request buffer is limited in size
     if (allRequests.length >= 245) {
       performance.clearResourceTimings();
     }
 
-    // Sorting the network requests in increasing order on the basis of duration.
+    // Sort the network requests in decreasing order of duration
     extractedRequests.sort(function (a, b) {
       if (a.timeVal < b.timeVal) {
         return 1;
@@ -88,7 +90,7 @@ class SprPerformanceMeasureSDK {
 
   // Method to get the memory statistics
   getMemoryStats() {
-    // if browser does not support window.performance, then we can't extract the network requests
+    // If browser does not support window.performance, then we can't extract the memory requests
     if (
       window.performance === undefined ||
       window.performance.memory === undefined
@@ -96,24 +98,24 @@ class SprPerformanceMeasureSDK {
       return "Memory statistics can't be extracted!";
     }
 
-    // get memory statistics
+    // Get memory statistics
     const memoryData = window.performance.memory;
 
-    // current allocated heap size including free and occupied space
+    // Current allocated heap size including free and occupied space
     let currentAllocatedHeap = memoryData.totalJSHeapSize;
 
-    // used heap size
+    // Used heap size
     let totalMemoryHeapUsed = memoryData.usedJSHeapSize;
 
-    // maximum heap size limit
+    // Maximum heap size limit
     let heapSizeLimit = memoryData.jsHeapSizeLimit;
 
-    // converting Bytes to Megabytes
+    // Convert Bytes to Megabytes
     currentAllocatedHeap = currentAllocatedHeap / (1024 * 1024);
     totalMemoryHeapUsed = totalMemoryHeapUsed / (1024 * 1024);
     heapSizeLimit = heapSizeLimit / (1024 * 1024);
 
-    // storing memory info into memoryStats object
+    // Store memory info into memoryStats object
     const memoryStats = {
       currentAllocatedMemoryHeap: currentAllocatedHeap.toFixed(2) + "MB",
       totalMemoryHeapUsed: totalMemoryHeapUsed.toFixed(2) + "MB",
@@ -123,24 +125,24 @@ class SprPerformanceMeasureSDK {
     return memoryStats;
   }
 
-  // method to get all the long tasks
+  // Method to get all the long tasks
   getLongTasks() {
-    let longTasks = []; // array to store list of long tasks
+    let longTasks = []; // Array to store list of long tasks
 
-    // create an PerformanceObserver object
+    // Create a PerformanceObserver object
     const observer = new PerformanceObserver(function () {});
 
-    // register the observer to listen to lontask events
-    // buffered is set to true so that the all the long tasks can be reported starting from the first long task
+    // Register the observer to listen to longtask events
+    // 'buffered' is set to true so that the all the long tasks can be reported starting from the first long task
     observer.observe({ type: "longtask", buffered: true });
 
-    // extracting all the long tasks
+    // Extract all the long tasks
     longTasks = observer.takeRecords();
 
-    // remove the event listener from the observer so that long tasks are no longer listened to
+    // Remove the event listener from the observer so that long tasks are no longer listened to
     observer.disconnect();
 
-    // Sorting the long tasks in increasing order on the basis of duration.
+    // Sort the long tasks in decreasing order of duration
     longTasks.sort(function (a, b) {
       if (a.duration < b.duration) {
         return 1;
@@ -154,9 +156,9 @@ class SprPerformanceMeasureSDK {
     return longTasks;
   }
 
-  // function to get summary of all statistics and print them on the console
+  // Function to get summary of all statistics and print them on the console
   printSummary() {
-    // get the summary
+    // Get the summary and store it into an object
     const finalSummary = {
       networkSummary: this.getNetworkStats(0),
       memorySummary: this.getMemoryStats(),
@@ -166,13 +168,13 @@ class SprPerformanceMeasureSDK {
     console.log("Summary: ", finalSummary);
   }
 
-  // method to start profile recording which takes 15 seconds as default
+  // Method to start profile recording which takes 15 seconds as default
   startProfiling(profileName, timer = 15000) {
-    // start recorind profile
+    // Start recording profile
     console.profile(profileName);
 
-    // stop recording the profile after timer expires
-    // This profile gets saved in the JavaScript Profiler panel in the Developer Tools.
+    // Stop recording the profile after 'timer' duration
+    // This profile gets saved in the JavaScript Profiler panel in the Developer Tools
     setTimeout(function () {
       console.profileEnd(profileName);
     }, timer);
@@ -186,19 +188,19 @@ class SprPerformanceMeasureSDK {
 
   // Method to get the har data
   getHAR() {
-    // Sending a message to the background script to download the HAR file
+    // Send message to the background script to download the HAR file
     chrome.runtime.sendMessage("get-har");
   }
 }
 
-// Attaching the sdk to the window object in context of the console of the extension
+// Attach the sdk to the window object in context of the console of the extension
 const sdk = new SprPerformanceMeasureSDK();
 window.sdk = sdk;
 
 let prevUsed = 0;
 let prevTotal = 0;
 
-// Recieving a message
+// Receive messages
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   if (message.text === "profile") {
     // If the message recieved is 'profile', then start profiling
@@ -286,7 +288,7 @@ function sendLongTasks() {
   chrome.runtime.sendMessage(data);
 }
 
-// Function to send the cpu stats back
+// Function to send the cpu usage stats
 function sendCPU(data) {
   chrome.runtime.sendMessage(data);
 }
