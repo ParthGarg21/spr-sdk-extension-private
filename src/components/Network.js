@@ -1,6 +1,6 @@
 /**
- * Component that renders the network calls statistics by communicating with the content script.
- * Whenever the component is rendered, the fresh summary is generated.
+ * Component that renders the network call statistics by communicating with the content script.
+ * As soon as the component renders, a fresh summary of the latest calls is generated.
  */
 
 /*global chrome*/
@@ -32,7 +32,7 @@ function Network() {
     const ttfb = request.ttfb;
     const initiatorType = request.initiatorType;
 
-    // Even shorter URL
+    // Shorten URL for non-fetched URL's
     const summarizedURL = summarizeURL(requestedURL);
 
     return (
@@ -61,9 +61,9 @@ function Network() {
 
     // Function to listen to the incoming message containing network info
     function listener(message) {
-      // If we get the desired message from the content script, then update the memory summay
+      // If we get the desired message from the content script, then we update the network summary
       if (message.text === "network") {
-        // removing the listener to avoid unwanted redundant and repeated listening listening
+        //Remove listener to avoid unwanted redundant and repeated listening
         chrome.runtime.onMessage.removeListener(listener);
 
         console.log("n");
@@ -71,14 +71,14 @@ function Network() {
       }
     }
 
-    // Recieve message from the content script to get the memory stats
+    // Recieve message from the content script to get the network stats
     chrome.runtime.onMessage.addListener(listener);
   }
 
-  // When the component gets first rendered, send message to the content script
+  // When the component renders, send message to the content script
   useEffect(sendMessage, []);
 
-  // Render the summary that we get
+  // Render the network summary that we get
   return (
     <div className="summary tableContainer">
       <table className="table">
@@ -92,7 +92,7 @@ function Network() {
           </tr>
         </thead>
         <tbody className="tbody">
-          {/* Map on all the network requests and then render each network request as a table */}
+          {/* Map on all the network requests and then render each network request as a table row */}
           {summary.map(function (request, idx) {
             return singleRequest(request, idx);
           })}
