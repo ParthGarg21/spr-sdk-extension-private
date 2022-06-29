@@ -45,7 +45,7 @@ const App = () => {
 
     // Function to listen to the incoming message containing the dessired info
     const listener = (message) => {
-      // If we get the desired message from the content script, then we update the dessired state
+      // If we get the desired message from the content script, then we update the desired state
       if (message.text === stat) {
         // Remove listener to avoid unwanted redundant and repeated listening
         chrome.runtime.onMessage.removeListener(listener);
@@ -61,8 +61,6 @@ const App = () => {
   useEffect(function () {
     sendMessage("copy", setCopy);
   }, []);
-
-  console.log(memory);
 
   return (
     <div className="wrapper">
