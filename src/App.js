@@ -10,7 +10,7 @@ import { BsCpuFill } from "react-icons/bs";
 import { VscDebugContinue, VscOutput } from "react-icons/vsc";
 import { TbWorldDownload } from "react-icons/tb";
 import { MdContentCopy } from "react-icons/md";
-import NetworkGraph from "./components/NetworkGraphComponent/NetworkGraph";
+import NetworkGraph from "./components/networkGraphComponent/NetworkGraph";
 import Network from "./components/Network";
 import Memory from "./components/Memory";
 import LongTasks from "./components/LongTasks";
@@ -20,6 +20,7 @@ import GetHar from "./components/GetHar";
 import Feature from "./components/Feature";
 import PrintSummary from "./components/PrintSummary";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { FiShare } from "react-icons/fi";
 import { useEffect, useState } from "react";
 
 const App = () => {
@@ -34,6 +35,14 @@ const App = () => {
 
   // State to store the text to be copied
   const [longTasks, setLongTasks] = useState([]);
+
+  // Function to post message to an api end point
+  const shareMessage = () => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const tabId = tabs[0].id;
+      chrome.tabs.sendMessage(tabId, "postMessage");
+    });
+  };
 
   // Function to send a message to the content script to get a particular type of summary
   const sendMessage = (stat, setter) => {
@@ -68,6 +77,9 @@ const App = () => {
         <div className="logo-con">
           <img src="/logo.png" alt="Sprinklr logo" className="logo" />
           <h1 className="title">Sprinklr SDK Extension</h1>
+        </div>
+        <div className="share-con">
+          <FiShare className="share-icn" onClick={shareMessage}></FiShare>
         </div>
         <div className="copy-con">
           <CopyToClipboard text={copy}>

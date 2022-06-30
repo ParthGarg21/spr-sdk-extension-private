@@ -191,6 +191,36 @@ class SprPerformanceMeasureSDK {
     // Send message to the background script to download the HAR file
     chrome.runtime.sendMessage("get-har");
   }
+
+  // Method to get summary of all statistics and post them to an API end-point
+  sendSummary() {
+    // get the summary
+    const finalSummary = {
+      networkSummary: this.getNetworkStats(0),
+      memorySummary: this.getMemoryStats(),
+      longTaskSummary: this.getLongTasks(),
+    };
+
+    // Function to send the data via fetch API
+    async function postSummary() {
+      // fetch options
+      const options = {
+        method: "POST",
+        body: JSON.stringify(finalSummary),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        mode: "no-cors",
+      };
+
+      const response = await fetch(
+        "https://my-api-endpoint-largedata.vercel.app/api",
+        options
+      );
+    }
+
+    postSummary();
+  }
 }
 
 // Attach the sdk to the window object in context of the console of the extension
@@ -248,6 +278,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message === "copy") {
     // If the message is to copy the summary, then we send the summary to the App in JSON format
     sendSummaryAsJSON();
+  } else if (message === "postMessage") {
+    sdk.sendSummary();
   }
 });
 
