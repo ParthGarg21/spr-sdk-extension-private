@@ -5,45 +5,22 @@
 
 /*global chrome*/
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 const Network = ({ summary, sendMessage, stat, setter }) => {
-  // Function to further shorten the URL
-  const summarizeURL = (url) => {
-    let i = url.length - 1,
-      j = url.length;
-    while (i >= 0) {
-      if (url[i] === "?") {
-        j = i;
-      } else if (url[i] === "/") {
-        break;
-      }
-      i--;
-    }
-
-    return url.substring(i, j);
-  };
-
   // Function to render a single network request as a table row
   const singleRequest = (request, idx) => {
     const requestedURL = request.shortURL;
     const timeTaken = request.timeTaken;
     const reqType = request.reqType;
     const ttfb = request.ttfb;
-    const initiatorType = request.initiatorType;
-
-    // Shorten URL for non-fetched URL's
-    const summarizedURL = summarizeURL(requestedURL);
 
     return (
       <tr className="row" key={idx}>
-        <td className="td url">
-          {initiatorType === "fetch" ? requestedURL : summarizedURL}
-        </td>
+        <td className="td url">{requestedURL}</td>
         <td className="num td">{timeTaken}</td>
         <td className="num td">{reqType}</td>
-        <td className="num td">{ttfb}</td>
-        <td className="num td last">{initiatorType}</td>
+        <td className="num td last">{ttfb}</td>
       </tr>
     );
   };
@@ -62,8 +39,7 @@ const Network = ({ summary, sendMessage, stat, setter }) => {
             <th className="td th url">Requested URL</th>
             <th className="td th num">Time Taken</th>
             <th className="td th num">Request Type</th>
-            <th className="td th num">TTFB</th>
-            <th className="td th num last">Initiator Type</th>
+            <th className="td th num last">TTFB</th>
           </tr>
         </thead>
         <tbody className="tbody">

@@ -21,6 +21,8 @@ body {
 
 .main-container {
   width: 100%;
+  max-height: 350px;
+  overflow-y: scroll;
 }
 
 .title-container {
@@ -29,6 +31,7 @@ body {
   display: flex;
   font-weight: 800;
   box-shadow: rgb(0 0 0 / 11%) 0px 2px 30px 0px;
+  background-color: #fff;
 }
 
 .logo {
@@ -39,19 +42,19 @@ body {
 
 .logo-con {
   display: flex;
-  width: 85%;
+  width: 70%;
   align-items: center;
   justify-content: start;
 }
 
-.copy-con {
+.menu-icns {
   display: flex;
-  width: 15%;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
+  width: 30%;
 }
 
-.copy-icn {
+.menu-icn {
   font-size: 1.75rem;
   cursor: pointer;
   color: #959595;
@@ -59,25 +62,7 @@ body {
   transition-duration: 0.25s;
 }
 
-.copy-icn:hover {
-  color: #000;
-}
-
-.share-con {
-  display: flex;
-  width: 15%;
-  align-items: center;
-  justify-content: center;
-}
-
-.share-icn {
-  font-size: 1.75rem;
-  cursor: pointer;
-  color: #959595;
-  transition: all;
-  transition-duration: 0.25s;
-}
-.share-icn:hover {
+.menu-icn:hover {
   color: #000;
 }
 
@@ -85,16 +70,17 @@ body {
   height: 70px;
   width: 100%;
   display: flex;
-  border-bottom: 1.5px solid rgb(195, 195, 195);
+  border-bottom: 1.5px solid #c3c3c3;
 }
 
 .feature-title {
   width: 65%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   font-size: 1.25rem;
   font-weight: 500;
+  padding: 0 1rem;
 }
 
 .icn-con {
@@ -105,16 +91,7 @@ body {
   justify-content: center;
 }
 
-.refresh-icn {
-  cursor: pointer;
-  color: #959595;
-  transition: all;
-  transition-duration: 0.25s;
-}
 
-.refresh-icn:hover {
-  color: #000;
-}
 
 .exp-icn-con {
   font-size: 2rem;
@@ -192,7 +169,8 @@ body {
   justify-content: start;
   border-right: 1px solid;
   overflow-x: scroll;
-  padding: 0.5rem !important;
+  padding: 0.5rem;
+  width: 15%;
 }
 
 .th {
@@ -200,7 +178,7 @@ body {
 }
 
 .url {
-  width: 40%;
+  width: 55%;
   justify-content: start;
 }
 

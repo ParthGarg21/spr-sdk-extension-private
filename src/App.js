@@ -22,6 +22,7 @@ import PrintSummary from "./components/PrintSummary";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { FiShare } from "react-icons/fi";
 import { useEffect, useState } from "react";
+import { MdOutlineRefresh } from "react-icons/md";
 
 const App = () => {
   // State to store the text to be copied
@@ -66,6 +67,13 @@ const App = () => {
     chrome.runtime.onMessage.addListener(listener);
   };
 
+  // Function to refresh all the stats
+  const refresh = () => {
+    sendMessage("network", setNetwork);
+    sendMessage("memory", setMemory);
+    sendMessage("longtasks", setLongTasks);
+  };
+
   // Initially setting up the copy text when the extension renders
   useEffect(function () {
     sendMessage("copy", setCopy);
@@ -74,23 +82,27 @@ const App = () => {
   return (
     <div className="wrapper">
       <div className="title-container">
+        
         <div className="logo-con">
           <img src="/logo.png" alt="Sprinklr logo" className="logo" />
           <h1 className="title">Sprinklr SDK Extension</h1>
         </div>
-        <div className="share-con">
-          <FiShare className="share-icn" onClick={shareMessage}></FiShare>
-        </div>
-        <div className="copy-con">
+        
+        <div className="menu-icns">
+          <MdOutlineRefresh className="menu-icn" onClick={refresh}></MdOutlineRefresh>
+
+          <FiShare className="menu-icn" onClick={shareMessage}></FiShare>
+
           <CopyToClipboard text={copy}>
             <MdContentCopy
               onClick={() => {
                 sendMessage("copy", setCopy);
               }}
-              className="copy-icn"
+              className="menu-icn"
             ></MdContentCopy>
           </CopyToClipboard>
         </div>
+
       </div>
       <div className="main-container">
         <div className="features-con">

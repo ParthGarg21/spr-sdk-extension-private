@@ -7,7 +7,7 @@ import { useState } from "react";
 import {
   MdOutlineExpandLess,
   MdOutlineExpandMore,
-  MdOutlineRefresh,
+ 
 } from "react-icons/md";
 
 const Feature = (props) => {
@@ -27,16 +27,6 @@ const Feature = (props) => {
         </div>
         <h3 className="feature-title">{props.title}</h3>
         <div className="exp-icn-con">
-          {props.sendMessage !== undefined ? (
-            <MdOutlineRefresh
-              className="refresh-icn"
-              onClick={() => {
-                props.sendMessage(props.stat, props.setter)
-              }}
-            ></MdOutlineRefresh>
-          ) : (
-            <></>
-          )}
           {!expandFeature ? (
             <MdOutlineExpandMore
               className="exp-icn"

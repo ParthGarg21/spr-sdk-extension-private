@@ -10,20 +10,45 @@ class SprPerformanceMeasureSDK {
     ) {
       return "Network requests can't be extracted!";
     }
-
-    //Function that shortens the requested URL of a network request and clips the domain name
-    function shortenURL(url) {
+    // Function to clip the https or https header
+    function clipHttps(url) {
       let count = 0;
-
       for (let i = 0; i < url.length; i++) {
         if (url[i] === "/") {
           count++;
         }
-
-        if (count === 3) {
-          return url.substring(i);
+        if (count === 2) {
+          return url.substring(i + 1);
         }
       }
+    }
+
+    // Function to shorten the url
+    function shortenURL(url) {
+      // Clip the http/https header
+      url = clipHttps(url);
+
+      // If the url is just a home route, return that route
+      if (url[url.length - 1] === "/") {
+        return url.substring(0, url.length - 1);
+      }
+
+      const home = window.location.host;
+
+      // Clip url query parameters
+      for (let i = url.length - 1; i >= 0; i--) {
+        if (url[i] === "?") {
+          url = url.substring(0, i);
+          break;
+        }
+      }
+
+      // If the url is a route from the current home page, then clip that portion
+      if (url.includes(home)) {
+        url = url.substring(home.length + 1);
+      }
+
+      return url;
     }
 
     // Array to store required resources
@@ -87,6 +112,7 @@ class SprPerformanceMeasureSDK {
 
     return extractedRequests;
   }
+
 
   // Method to get the memory statistics
   getMemoryStats() {
