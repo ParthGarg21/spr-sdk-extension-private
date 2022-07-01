@@ -18,7 +18,6 @@ import CPUGraph from "./components/cpuComponent/CPUGraph";
 import Profiling from "./components/Profiling";
 import GetHar from "./components/GetHar";
 import Feature from "./components/Feature";
-import PrintSummary from "./components/PrintSummary";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { FiShare } from "react-icons/fi";
 import { useEffect, useState } from "react";
@@ -67,6 +66,13 @@ const App = () => {
     chrome.runtime.onMessage.addListener(listener);
   };
 
+  const printMessage = () => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const tabId = tabs[0].id;
+      chrome.tabs.sendMessage(tabId, "print");
+    });
+  };
+
   // Function to refresh all the stats
   const refresh = () => {
     sendMessage("network", setNetwork);
@@ -82,16 +88,20 @@ const App = () => {
   return (
     <div className="wrapper">
       <div className="title-container">
-        
         <div className="logo-con">
           <img src="/logo.png" alt="Sprinklr logo" className="logo" />
           <h1 className="title">Sprinklr SDK Extension</h1>
         </div>
-        
+
         <div className="menu-icns">
-          <MdOutlineRefresh className="menu-icn" onClick={refresh}></MdOutlineRefresh>
+          <MdOutlineRefresh
+            className="menu-icn"
+            onClick={refresh}
+          ></MdOutlineRefresh>
 
           <FiShare className="menu-icn" onClick={shareMessage}></FiShare>
+
+          <VscOutput className="menu-icn" onClick={printMessage}></VscOutput>
 
           <CopyToClipboard text={copy}>
             <MdContentCopy
@@ -102,7 +112,6 @@ const App = () => {
             ></MdContentCopy>
           </CopyToClipboard>
         </div>
-
       </div>
       <div className="main-container">
         <div className="features-con">
@@ -153,11 +162,6 @@ const App = () => {
             icon={TbWorldDownload}
             feature={GetHar}
             title="Save Network Requests as .HAR"
-          ></Feature>
-          <Feature
-            icon={VscOutput}
-            feature={PrintSummary}
-            title="Print Summary on the console"
           ></Feature>
         </div>
       </div>

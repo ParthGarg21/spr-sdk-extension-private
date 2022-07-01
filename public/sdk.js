@@ -1,5 +1,7 @@
 // Content script
 
+/*global chrome*/
+
 class SprPerformanceMeasureSDK {
   // Method to get network statistics which take time greater than 'duration' milliseconds to complete
   getNetworkStats(duration = 500) {
@@ -29,7 +31,6 @@ class SprPerformanceMeasureSDK {
       url = clipHttps(url);
 
       // If the url is just a home route, return that route
-
       const home = window.location.host;
 
       // Clip url query parameters
@@ -292,7 +293,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message === "memory") {
     // If the message is to get the memory stats, then send the memory stats to the App
     sendMemoryStats();
-  } else if (message == "longtasks") {
+  } else if (message === "longtasks") {
     // If the message is to get the long tasks stats, then send the long task stats to the App
     sendLongTasks();
   } else if (message === "har") {
