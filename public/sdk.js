@@ -29,9 +29,6 @@ class SprPerformanceMeasureSDK {
       url = clipHttps(url);
 
       // If the url is just a home route, return that route
-      if (url[url.length - 1] === "/") {
-        return url.substring(0, url.length - 1);
-      }
 
       const home = window.location.host;
 
@@ -44,10 +41,14 @@ class SprPerformanceMeasureSDK {
       }
 
       // If the url is a route from the current home page, then clip that portion
-      if (url.includes(home)) {
+      if (url.includes(home) && url.length !== home.length + 1) {
         url = url.substring(home.length + 1);
       }
 
+      // Clip the lastmost '/'
+      if (url[url.length - 1] === "/") {
+        url = url.substring(0, url.length - 1);
+      }
       return url;
     }
 
@@ -112,7 +113,6 @@ class SprPerformanceMeasureSDK {
 
     return extractedRequests;
   }
-
 
   // Method to get the memory statistics
   getMemoryStats() {
