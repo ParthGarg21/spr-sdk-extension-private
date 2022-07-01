@@ -42,7 +42,7 @@ body {
 
 .logo-con {
   display: flex;
-  width: 70%;
+  width: 67.5%;
   align-items: center;
   justify-content: start;
 }
@@ -51,11 +51,11 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-  width: 30%;
+  width: 32.5%;
 }
 
 .menu-icn {
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   cursor: pointer;
   color: #959595;
   transition: all;
