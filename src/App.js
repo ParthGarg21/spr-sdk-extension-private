@@ -22,6 +22,8 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { FiShare } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { MdOutlineRefresh } from "react-icons/md";
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css";
 
 const App = () => {
   // State to store the text to be copied
@@ -94,23 +96,42 @@ const App = () => {
         <h1 className="title">Sprinklr SDK Extension</h1>
 
         <div className="menu-icns">
-          <MdOutlineRefresh
-            className="menu-icn"
-            onClick={refresh}
-          ></MdOutlineRefresh>
+          <Tippy content="Refresh">
+            <div>
+              <MdOutlineRefresh
+                className="menu-icn"
+                onClick={refresh}
+              ></MdOutlineRefresh>
+            </div>
+          </Tippy>
 
-          <FiShare className="menu-icn" onClick={shareMessage}></FiShare>
+          <Tippy content="Send summary to API">
+            <div>
+              <FiShare className="menu-icn" onClick={shareMessage}></FiShare>
+            </div>
+          </Tippy>
 
-          <VscOutput className="menu-icn" onClick={printMessage}></VscOutput>
+          <Tippy content="Print message on console">
+            <div>
+              <VscOutput
+                className="menu-icn"
+                onClick={printMessage}
+              ></VscOutput>
+            </div>
+          </Tippy>
 
-          <CopyToClipboard text={copy}>
-            <MdContentCopy
-              onClick={() => {
-                sendMessage("copy", setCopy);
-              }}
-              className="menu-icn"
-            ></MdContentCopy>
-          </CopyToClipboard>
+          <Tippy content="Copy summary">
+            <div>
+              <CopyToClipboard text={copy}>
+                <MdContentCopy
+                  onClick={() => {
+                    sendMessage("copy", setCopy);
+                  }}
+                  className="menu-icn"
+                ></MdContentCopy>
+              </CopyToClipboard>
+            </div>
+          </Tippy>
         </div>
       </div>
       <div className="main-container">
