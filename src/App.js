@@ -96,7 +96,7 @@ const App = () => {
         <h1 className="title">Sprinklr SDK Extension</h1>
 
         <div className="menu-icns">
-          <Tippy content="Refresh">
+          <Tippy content="Refresh" placement="bottom">
             <div>
               <MdOutlineRefresh
                 className="menu-icn"
@@ -105,13 +105,13 @@ const App = () => {
             </div>
           </Tippy>
 
-          <Tippy content="Send summary to API">
+          <Tippy content="Send summary to API" placement="bottom">
             <div>
               <FiShare className="menu-icn" onClick={shareMessage}></FiShare>
             </div>
           </Tippy>
 
-          <Tippy content="Print message on console">
+          <Tippy content="Print message on console" placement="bottom">
             <div>
               <VscOutput
                 className="menu-icn"
@@ -120,7 +120,7 @@ const App = () => {
             </div>
           </Tippy>
 
-          <Tippy content="Copy summary">
+          <Tippy content="Copy summary" placement="bottom">
             <div>
               <CopyToClipboard text={copy}>
                 <MdContentCopy
