@@ -88,10 +88,10 @@ const App = () => {
   return (
     <div className="wrapper">
       <div className="title-container">
-        <div className="logo-con">
+        <div className="img-con">
           <img src="/logo.png" alt="Sprinklr logo" className="logo" />
-          <h1 className="title">Sprinklr SDK Extension</h1>
         </div>
+        <h1 className="title">Sprinklr SDK Extension</h1>
 
         <div className="menu-icns">
           <MdOutlineRefresh

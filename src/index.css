@@ -40,18 +40,32 @@ body {
   margin: 0 0.5rem;
 }
 
-.logo-con {
+.img-con {
   display: flex;
-  width: 67.5%;
+  height: 100%;
+  width: 15%;
   align-items: center;
-  justify-content: start;
+  justify-content: center;
+}
+
+.img {
+  height: 90%;
+}
+
+.title {
+  height: 100%;
+  width: 55%;
+  display: flex;
+  align-items: center;
+  /* padding-left: 1rem; */
+  font-weight: 500;
 }
 
 .menu-icns {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-  width: 32.5%;
+  width: 30%;
 }
 
 .menu-icn {
@@ -89,8 +103,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: rgb(211, 211, 211);
 }
-
 
 
 .exp-icn-con {
@@ -99,10 +113,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-}
-
-.icn-con {
-  background-color: rgb(211, 211, 211);
 }
 
 .lineChart {
