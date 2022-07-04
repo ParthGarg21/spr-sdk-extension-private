@@ -12,6 +12,7 @@ class SprPerformanceMeasureSDK {
     ) {
       return "Network requests can't be extracted!";
     }
+
     // Function to clip the https or https header
     function clipHttps(url) {
       let count = 0;
@@ -26,11 +27,15 @@ class SprPerformanceMeasureSDK {
     }
 
     // Function to shorten the url
+    // In case of routes from the home page, we clip the homepage
+    // Else we keep the entire url
+    // We also clip the query parameters
+
     function shortenURL(url) {
       // Clip the http/https header
       url = clipHttps(url);
 
-      // If the url is just a home route, return that route
+      // Get the home domain
       const home = window.location.host;
 
       // Clip url query parameters
@@ -89,6 +94,9 @@ class SprPerformanceMeasureSDK {
           timeVal: Number(currDuration.toFixed(2)),
           shortURL: shortenURL(requestedURL),
           initiatorType: initiatorType,
+          domainLookupStart:
+            Number(request.domainLookupStart).toFixed(2) + "ms",
+          domainLookupEnd: Number(request.domainLookupEnd).toFixed(2) + "ms",
         };
 
         extractedRequests.push(req);
@@ -202,25 +210,20 @@ class SprPerformanceMeasureSDK {
 
     // Stop recording the profile after 'timer' duration
     // This profile gets saved in the JavaScript Profiler panel in the Developer Tools
-    setTimeout(function () {
+    setTimeout(() => {
       console.profileEnd(profileName);
     }, timer);
   }
 
-  // Method to get the cpu stats
-  getCPUStats() {
-    // Sending a message to the background script to get the cpu stats
-    chrome.runtime.sendMessage("cpu-sdk");
-  }
-
   // Method to get the har data
   getHAR() {
-    // Send message to the background script to download the HAR file
+    // Send message to the devtools script to download the HAR file
     chrome.runtime.sendMessage("get-har");
   }
 
   // Method to get summary of all statistics and post them to an API end-point
   sendSummary() {
+    const postURL = "https://my-api-endpoint-largedata.vercel.app/api";
     // get the summary
     const finalSummary = {
       networkSummary: this.getNetworkStats(0),
@@ -235,38 +238,36 @@ class SprPerformanceMeasureSDK {
         method: "POST",
         body: JSON.stringify(finalSummary),
         headers: {
+          // Specifying explicitilly that the content is in JSON string format
           "Content-Type": "application/json",
         },
         mode: "no-cors",
       };
 
-      const response = await fetch(
-        "https://my-api-endpoint-largedata.vercel.app/api",
-        options
-      );
+      await fetch(postURL, options);
     }
 
     postSummary();
   }
 }
 
-// Attach the sdk to the window object in context of the console of the extension
+// Attach the sdk to the window object in context of the console context of the extension
 const sdk = new SprPerformanceMeasureSDK();
-window.sdk = sdk;
 
+// previous data for the cpu usage
 let prevUsed = 0;
 let prevTotal = 0;
 
-// Receive messages
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+// Receive messages and deciding how to respond back
+chrome.runtime.onMessage.addListener((message) => {
   if (message.text === "profile") {
     // If the message recieved is 'profile', then start profiling
     sdk.startProfiling(message.profileName, message.time);
   } else if (message === "cpu-app") {
     // send message to the background script to get the cpu-usage on recieving a message from the app
-    sdk.getCPUStats();
+    getCPUStats();
   } else if (message.text === "cpu-bg") {
-    // send messgae to the app on recieving after reccieving the cpu usage data background script
+    // send messgae to the app after recieving the cpu usage data background script
     const currUsed = message.cpu.usageTime;
     const currTotal = message.cpu.totalTime;
 
@@ -309,6 +310,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     sdk.sendSummary();
   }
 });
+
+// Function to get the cpu stats
+const getCPUStats = () => {
+  // Sending a message to the background script to get the cpu stats
+  chrome.runtime.sendMessage("cpu-sdk");
+};
 
 // Function to send the memory stats
 const sendMemoryStats = () => {

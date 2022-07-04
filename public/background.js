@@ -1,4 +1,5 @@
 // Background script
+// Used just for getting the CPU information
 
 const cpuStats = (tabID) => {
   // Callback to get the cpu stats
@@ -37,8 +38,5 @@ chrome.runtime.onMessage.addListener(function (message, sender) {
   if (message === "cpu-sdk") {
     // If the message is to get the cpu stats, invoke the function to get the cpu stats
     cpuStats(sender.tab.id);
-  } else if (message === "get-har") {
-    // Send message to the devtools to get the network requests data as HAR file
-    chrome.runtime.sendMessage("get-har-bg");
   }
 });

@@ -22,6 +22,8 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { FiShare } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { MdOutlineRefresh } from "react-icons/md";
+
+// Tippy component for rendering a tool tip while hovering
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 
@@ -43,6 +45,14 @@ const App = () => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const tabId = tabs[0].id;
       chrome.tabs.sendMessage(tabId, "postMessage");
+    });
+  };
+
+  // Function to send message to the content script to print the summary on the console
+  const printMessage = () => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const tabId = tabs[0].id;
+      chrome.tabs.sendMessage(tabId, "print");
     });
   };
 
@@ -68,13 +78,6 @@ const App = () => {
     chrome.runtime.onMessage.addListener(listener);
   };
 
-  const printMessage = () => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const tabId = tabs[0].id;
-      chrome.tabs.sendMessage(tabId, "print");
-    });
-  };
-
   // Function to refresh all the stats
   const refresh = () => {
     sendMessage("network", setNetwork);
@@ -83,7 +86,7 @@ const App = () => {
   };
 
   // Initially setting up the copy text when the extension renders
-  useEffect(function () {
+  useEffect(() => {
     sendMessage("copy", setCopy);
   }, []);
 

@@ -5,7 +5,7 @@
 
 /*global chrome*/
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 const Memory = ({summary, sendMessage, stat, setter}) => {
 
