@@ -203,18 +203,6 @@ class SprPerformanceMeasureSDK {
     console.log("Summary: ", finalSummary);
   }
 
-  // Method to start profile recording which takes 15 seconds as default
-  startProfiling(profileName, timer = 15000) {
-    // Start recording profile
-    console.profile(profileName);
-
-    // Stop recording the profile after 'timer' duration
-    // This profile gets saved in the JavaScript Profiler panel in the Developer Tools
-    setTimeout(() => {
-      console.profileEnd(profileName);
-    }, timer);
-  }
-
   // Method to get the har data
   getHAR() {
     // Send message to the devtools script to download the HAR file
@@ -248,6 +236,23 @@ class SprPerformanceMeasureSDK {
     }
 
     postSummary();
+  }
+  
+  // Method to start profile recording which takes 15 seconds as default
+  startProfiling(profileName, timer = 15000) {
+    // Start recording profile
+    console.profile(profileName);
+
+    // Stop recording the profile after 'timer' duration
+    // This profile gets saved in the JavaScript Profiler panel in the Developer Tools
+    setTimeout(() => {
+      console.profileEnd(profileName);
+    }, timer);
+  }
+
+  // method to stop the most recent profile manually
+  stopProfiling() {
+    console.profileEnd();
   }
 }
 

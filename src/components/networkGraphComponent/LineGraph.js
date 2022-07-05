@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 
+import { FiAlertTriangle } from "react-icons/fi";
+
 const LineChart = () => {
   // Function to get the current time for X-axis label of the graph
   const getTime = (isInitial) => {
@@ -47,6 +49,9 @@ const LineChart = () => {
   const [xData, setXData] = useState([...xDummy]);
   const [yData, setYData] = useState([...yDummy]);
 
+  // State to control whether the network is slow or not
+  const [slow, setSlow] = useState(false);
+
   // URL where the GET request using fetch will be made
   const url = "https://jsonplaceholder.typicode.com/posts";
 
@@ -54,6 +59,7 @@ const LineChart = () => {
   const fillGraph = () => {
     // Main asynchronous function that calculates the round trip time.
     const getRoundTripTime = async () => {
+      xData.push(getTime(false));
       const res = await fetch(url);
       const data = await res.json();
 
@@ -71,11 +77,17 @@ const LineChart = () => {
           break;
         }
       }
+
+      if (dur > 600) {
+        setSlow(true);
+      } else {
+        setSlow(false);
+      }
+
       // Modifying the states.
       xData.shift();
       yData.shift();
 
-      xData.push(getTime(false));
       yData.push(dur);
 
       // Update the states to include the fresh entries
@@ -181,7 +193,25 @@ const LineChart = () => {
   // When the component renders, start filling the graph
   useEffect(handleInterval, []);
 
-  return <Line data={data} options={options} />;
+  let warning = slow ? (
+    <div className="warningContainer">
+      <FiAlertTriangle className="warningIcon"></FiAlertTriangle>
+      <h1 className="warning">Slow Network</h1>
+    </div>
+  ) : (
+    <></>
+  );
+
+  return (
+    <>
+      {warning}
+      <div className="lineChart">
+        <div className="networkContainer">
+          <Line data={data} options={options} />
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default LineChart;
