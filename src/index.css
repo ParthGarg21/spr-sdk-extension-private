@@ -165,20 +165,22 @@ body {
   margin: 0;
   display: flex;
   align-items: center;
-  justify-content: start;
+  justify-content: center;
   border-right: 1px solid;
-  overflow-x: scroll;
   padding: 0.5rem;
   width: 15%;
+  word-break: break-all;
 }
 
 .th {
-  justify-content: center;
+  word-break: normal;
+  word-wrap: break-word;
 }
 
 .url {
   width: 55%;
   justify-content: start;
+  word-break: break-all;
 }
 
 .tbody .row {

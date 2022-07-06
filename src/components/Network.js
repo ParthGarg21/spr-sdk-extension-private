@@ -12,15 +12,15 @@ const Network = ({ summary, sendMessage, stat, setter }) => {
   const singleRequest = (request, idx) => {
     const requestedURL = request.shortURL;
     const timeTaken = request.timeTaken;
-    const reqType = request.reqType;
+    const initiatorType = request.initiatorType;
     const ttfb = request.ttfb;
 
     return (
       <tr className="row" key={idx}>
         <td className="td url">{requestedURL}</td>
-        <td className="num td">{timeTaken}</td>
-        <td className="num td">{reqType}</td>
-        <td className="num td last">{ttfb}</td>
+        <td className="td">{timeTaken}</td>
+        <td className="td">{initiatorType}</td>
+        <td className="td last">{ttfb}</td>
       </tr>
     );
   };
@@ -37,9 +37,9 @@ const Network = ({ summary, sendMessage, stat, setter }) => {
         <thead className="thead">
           <tr className="row">
             <th className="td th url">Requested URL</th>
-            <th className="td th num">Time Taken</th>
-            <th className="td th num">Request Type</th>
-            <th className="td th num last">TTFB</th>
+            <th className="td th">Time Taken<br />(in ms)</th>
+            <th className="td th">Type</th>
+            <th className="td th last">TTFB<br />(in ms)</th>
           </tr>
         </thead>
         <tbody className="tbody">

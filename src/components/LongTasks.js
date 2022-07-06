@@ -11,7 +11,7 @@ const LongTasks = ({ summary, sendMessage, stat, setter }) => {
   // Function to render a single long task as a table row
   const singleTask = (task, id) => {
     const name = task.name;
-    const timeTaken = task.duration + "ms";
+    const timeTaken = task.duration;
 
     return (
       <tr className="row" key={id}>
@@ -31,8 +31,8 @@ const LongTasks = ({ summary, sendMessage, stat, setter }) => {
       <table className="table">
         <thead className="thead">
           <tr className="row">
-            <th className="td th lt-td">Name</th>
-            <th className="td th last lt-td">Duration</th>
+            <th className="td th lt-td">Origin</th>
+            <th className="td th last lt-td">Duration<br />(in ms)</th>
           </tr>
         </thead>
         <tbody className="tbody">

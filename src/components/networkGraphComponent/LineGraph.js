@@ -64,7 +64,6 @@ const LineChart = () => {
 
       const abortTimer = setTimeout(() => {
         fetchController.abort();
-        console.log("Aborted");
       }, 1000);
 
       xData.push(getTime(false));

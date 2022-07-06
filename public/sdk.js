@@ -81,22 +81,20 @@ class SprPerformanceMeasureSDK {
         // Initiator type
         const initiatorType = request.initiatorType;
 
-        // Manually update the request type to API if the initiator is fetch
-        // because by default, the entryType of each request is 'resource'.
-        const reqType = initiatorType === "fetch" ? "API" : request.entryType; // request type
+        // Entry type
+        const entryType = request.entryType; // request type
 
         // Store all request info into a request object
         const req = {
           requestedURL: requestedURL,
-          timeTaken: currDuration.toFixed(2) + "ms",
-          reqType: reqType,
-          ttfb: ttfb.toFixed(2) + "ms",
-          timeVal: Number(currDuration.toFixed(2)),
+          timeTaken: Number(currDuration.toFixed(2)),
+          entryType: entryType,
+          ttfb: Number(ttfb.toFixed(2)),
           shortURL: shortenURL(requestedURL),
           initiatorType: initiatorType,
           domainLookupStart:
-            Number(request.domainLookupStart).toFixed(2) + "ms",
-          domainLookupEnd: Number(request.domainLookupEnd).toFixed(2) + "ms",
+            Number(request.domainLookupStart).toFixed(2),
+          domainLookupEnd: Number(request.domainLookupEnd).toFixed(2),
         };
 
         extractedRequests.push(req);
@@ -111,9 +109,9 @@ class SprPerformanceMeasureSDK {
 
     // Sort the network requests in decreasing order of duration
     extractedRequests.sort(function (a, b) {
-      if (a.timeVal < b.timeVal) {
+      if (a.timeTaken < b.timeTaken) {
         return 1;
-      } else if (a.timeVal === b.timeVal) {
+      } else if (a.timeTaken === b.timeTaken) {
         return 0;
       } else {
         return -1;
@@ -237,7 +235,7 @@ class SprPerformanceMeasureSDK {
 
     postSummary();
   }
-  
+
   // Method to start profile recording which takes 15 seconds as default
   startProfiling(profileName, timer = 15000) {
     // Start recording profile
