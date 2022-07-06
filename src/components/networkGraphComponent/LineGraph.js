@@ -57,32 +57,41 @@ const LineChart = () => {
 
   // Function to get a single entry for the graph by fetching data from the API, and then calculate its round trip duration
   const fillGraph = () => {
-    // Main asynchronous function that calculates the round trip time.
     const getRoundTripTime = async () => {
+      const fetchController = new AbortController();
+
+      const signal = fetchController.signal;
+
+      const abortTimer = setTimeout(() => {
+        fetchController.abort();
+        console.log("Aborted");
+      }, 1000);
+
       xData.push(getTime(false));
-      const res = await fetch(url);
-      const data = await res.json();
 
       let dur;
 
-      const req = window.performance.getEntriesByType("resource");
+      try {
+        await fetch(url, { signal: signal });
+        const req = window.performance.getEntriesByType("resource");
 
-      // Search for the current request in the network request buffer to calculate its round trip time
-      for (let i = req.length - 1; i >= 0; i--) {
-        // If the request contains the url, this means this is the fetch request that was made
-        // We get the round trip time for this request by taking the duration property
+        // Search for the current request in the network request buffer to calculate its round trip time
+        for (let i = req.length - 1; i >= 0; i--) {
+          // If the request contains the url, this means this is the fetch request that was made
+          // We get the round trip time for this request by taking the duration property
 
-        if (req[i].name.includes(url)) {
-          dur = req[i].duration;
-          break;
+          if (req[i].name.includes(url)) {
+            dur = req[i].duration;
+            break;
+          }
         }
+        setSlow(false);
+      } catch (err) {
+        dur = 600;
+        setSlow(true);
       }
 
-      if (dur > 600) {
-        setSlow(true);
-      } else {
-        setSlow(false);
-      }
+      clearTimeout(abortTimer);
 
       // Modifying the states.
       xData.shift();
@@ -95,7 +104,7 @@ const LineChart = () => {
       setYData([...yData]);
 
       // If the request buffers gets completely filled, then we empty that buffer
-      if (req.length === 245) {
+      if (window.performance.getEntriesByType("resource").length === 245) {
         performance.clearResourceTimings();
       }
     };
