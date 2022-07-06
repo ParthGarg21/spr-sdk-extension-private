@@ -204,8 +204,10 @@ const LineChart = () => {
 
   let warning = slow ? (
     <div className="warningContainer">
-      <FiAlertTriangle className="warningIcon"></FiAlertTriangle>
-      <h1 className="warning">Slow Network</h1>
+      <div className="warning">
+        <FiAlertTriangle className="warningIcon"></FiAlertTriangle>
+        <h1 className="warning-heading">Slow Network</h1>
+      </div>
     </div>
   ) : (
     <></>
@@ -213,8 +215,8 @@ const LineChart = () => {
 
   return (
     <>
-      {warning}
       <div className="lineChart">
+        {warning}
         <div className="networkContainer">
           <Line data={data} options={options} />
         </div>
