@@ -5,6 +5,7 @@
 class SprPerformanceMeasureSDK {
   // Method to get network statistics which take time greater than 'duration' milliseconds to complete
   getNetworkStats(duration = 500) {
+    // console.log(str);
     // If browser does not support window.performance, then we can't extract the network requests
     if (
       window.performance === undefined ||
@@ -13,93 +14,34 @@ class SprPerformanceMeasureSDK {
       return "Network requests can't be extracted!";
     }
 
-    // Function to clip the https or https header
-    function clipHttps(url) {
-      let count = 0;
-      for (let i = 0; i < url.length; i++) {
-        if (url[i] === "/") {
-          count++;
-        }
-        if (count === 2) {
-          return url.substring(i + 1);
-        }
-      }
-    }
-
-    // Function to shorten the url
-    // In case of routes from the home page, we clip the homepage
-    // Else we keep the entire url
-    // We also clip the query parameters
-
-    function shortenURL(url) {
-      // Clip the http/https header
-      url = clipHttps(url);
-
-      // Get the home domain
-      const home = window.location.host;
-
-      // Clip url query parameters
-      for (let i = url.length - 1; i >= 0; i--) {
-        if (url[i] === "?") {
-          url = url.substring(0, i);
-          break;
-        }
-      }
-
-      // If the url is a route from the current home page, then clip that portion
-      if (url.includes(home) && url.length !== home.length + 1) {
-        url = url.substring(home.length + 1);
-      }
-
-      // Clip the lastmost '/'
-      if (url[url.length - 1] === "/") {
-        url = url.substring(0, url.length - 1);
-      }
-      return url;
-    }
-
-    // Array to store required resources
-    const extractedRequests = [];
-
     // Extract all the network requests
     // Gives an array of objects of network requests
     const allRequests = window.performance.getEntriesByType("resource");
 
-    for (let i = 0; i < allRequests.length; i++) {
-      // Current request
-      const request = allRequests[i];
-
+    const extractedRequests = allRequests.reduce((prev, request) => {
       const currDuration = request.duration;
 
       if (currDuration >= duration) {
-        // Requested URL of the network request
-        const requestedURL = request.name;
-
-        // Time To First Byte (TTFB)
-        const ttfb = request.responseStart - request.requestStart;
-
-        // Initiator type
-        const initiatorType = request.initiatorType;
-
-        // Entry type
-        const entryType = request.entryType; // request type
-
         // Store all request info into a request object
         const req = {
-          requestedURL: requestedURL,
+          // Requested URL of the network request
+          requestedURL: request.name,
           timeTaken: Number(currDuration.toFixed(2)),
-          entryType: entryType,
-          ttfb: Number(ttfb.toFixed(2)),
-          shortURL: shortenURL(requestedURL),
-          initiatorType: initiatorType,
-          domainLookupStart:
-            Number(request.domainLookupStart).toFixed(2),
+          entryType: request.entryType,
+          // Time To First Byte (TTFB)
+          ttfb: Number((request.responseStart - request.requestStart).toFixed(2)),
+          // Shortened URL
+          shortURL: shortenURL(request.name, window.location.host),
+          initiatorType: request.initiatorType,
+          domainLookupStart: Number(request.domainLookupStart).toFixed(2),
           domainLookupEnd: Number(request.domainLookupEnd).toFixed(2),
         };
 
-        extractedRequests.push(req);
+        return [...prev, req];
       }
-    }
+
+      return prev;
+    }, []);
 
     // If the length of requested resources exceeds 245 then clear all the resources
     // as the network request buffer is limited in size
@@ -108,15 +50,7 @@ class SprPerformanceMeasureSDK {
     }
 
     // Sort the network requests in decreasing order of duration
-    extractedRequests.sort(function (a, b) {
-      if (a.timeTaken < b.timeTaken) {
-        return 1;
-      } else if (a.timeTaken === b.timeTaken) {
-        return 0;
-      } else {
-        return -1;
-      }
-    });
+    sortArray(extractedRequests, "timeTaken");
 
     return extractedRequests;
   }
@@ -148,14 +82,12 @@ class SprPerformanceMeasureSDK {
     totalMemoryHeapUsed = totalMemoryHeapUsed / (1024 * 1024);
     heapSizeLimit = heapSizeLimit / (1024 * 1024);
 
-    // Store memory info into memoryStats object
-    const memoryStats = {
+    // Store memory info into an object and return it
+    return {
       currentAllocatedMemoryHeap: currentAllocatedHeap.toFixed(2) + "MB",
       totalMemoryHeapUsed: totalMemoryHeapUsed.toFixed(2) + "MB",
       memoryHeapSizeLimit: heapSizeLimit.toFixed(2) + "MB",
     };
-
-    return memoryStats;
   }
 
   // Method to get all the long tasks
@@ -176,15 +108,7 @@ class SprPerformanceMeasureSDK {
     observer.disconnect();
 
     // Sort the long tasks in decreasing order of duration
-    longTasks.sort(function (a, b) {
-      if (a.duration < b.duration) {
-        return 1;
-      } else if (a.duration === b.duration) {
-        return 0;
-      } else {
-        return -1;
-      }
-    });
+    sortArray(longTasks, "duration");
 
     return longTasks;
   }
@@ -208,7 +132,7 @@ class SprPerformanceMeasureSDK {
   }
 
   // Method to get summary of all statistics and post them to an API end-point
-  sendSummary() {
+  async sendSummary() {
     const postURL = "https://my-api-endpoint-largedata.vercel.app/api";
     // get the summary
     const finalSummary = {
@@ -217,23 +141,17 @@ class SprPerformanceMeasureSDK {
       longTaskSummary: this.getLongTasks(),
     };
 
-    // Function to send the data via fetch API
-    async function postSummary() {
-      // fetch options
-      const options = {
-        method: "POST",
-        body: JSON.stringify(finalSummary),
-        headers: {
-          // Specifying explicitilly that the content is in JSON string format
-          "Content-Type": "application/json",
-        },
-        mode: "no-cors",
-      };
+    const options = {
+      method: "POST",
+      body: JSON.stringify(finalSummary),
+      headers: {
+        // Specifying explicitilly that the content is in JSON string format
+        "Content-Type": "application/json",
+      },
+      mode: "no-cors",
+    };
 
-      await fetch(postURL, options);
-    }
-
-    postSummary();
+    await fetch(postURL, options);
   }
 
   // Method to start profile recording which takes 15 seconds as default
@@ -253,127 +171,3 @@ class SprPerformanceMeasureSDK {
     console.profileEnd();
   }
 }
-
-// Attach the sdk to the window object in context of the console context of the extension
-const sdk = new SprPerformanceMeasureSDK();
-
-// previous data for the cpu usage
-let prevUsed = 0;
-let prevTotal = 0;
-
-// Receive messages and deciding how to respond back
-chrome.runtime.onMessage.addListener((message) => {
-  if (message.text === "profile") {
-    // If the message recieved is 'profile', then start profiling
-    sdk.startProfiling(message.profileName, message.time);
-  } else if (message === "cpu-app") {
-    // send message to the background script to get the cpu-usage on recieving a message from the app
-    getCPUStats();
-  } else if (message.text === "cpu-bg") {
-    // send messgae to the app after recieving the cpu usage data background script
-    const currUsed = message.cpu.usageTime;
-    const currTotal = message.cpu.totalTime;
-
-    // The difference between usage time and total time
-    const usedDiff = Math.abs(currUsed - prevUsed);
-    const totalDiff = Math.abs(currTotal - prevTotal);
-
-    // CPU usage
-    const cpu = (usedDiff / totalDiff) * 100;
-
-    prevTotal = currTotal;
-    prevUsed = currUsed;
-
-    const data = {
-      text: "cpu",
-      data: cpu,
-    };
-
-    // send the CPU usage to the App
-    sendCPU(data);
-  } else if (message === "network") {
-    // If the message is to get the network stats, then send the network stats to the App
-    sendNetworkStats();
-  } else if (message === "memory") {
-    // If the message is to get the memory stats, then send the memory stats to the App
-    sendMemoryStats();
-  } else if (message === "longtasks") {
-    // If the message is to get the long tasks stats, then send the long task stats to the App
-    sendLongTasks();
-  } else if (message === "har") {
-    // If the message is to download the HAR file, then send message to the background script to download the HAR
-    sdk.getHAR();
-  } else if (message === "print") {
-    // If the message is to print the summary, then we simply print it
-    sdk.printSummary();
-  } else if (message === "copy") {
-    // If the message is to copy the summary, then we send the summary to the App in JSON format
-    sendSummaryAsJSON();
-  } else if (message === "postMessage") {
-    sdk.sendSummary();
-  }
-});
-
-// Function to get the cpu stats
-const getCPUStats = () => {
-  // Sending a message to the background script to get the cpu stats
-  chrome.runtime.sendMessage("cpu-sdk");
-};
-
-// Function to send the memory stats
-const sendMemoryStats = () => {
-  const memory = sdk.getMemoryStats();
-  const data = {
-    text: "memory",
-    data: memory,
-  };
-
-  chrome.runtime.sendMessage(data);
-};
-
-// Function to send the network stats
-const sendNetworkStats = () => {
-  const network = sdk.getNetworkStats(0);
-  const data = {
-    text: "network",
-    data: network,
-  };
-
-  chrome.runtime.sendMessage(data);
-};
-
-// Function to send the long tasks stats
-const sendLongTasks = () => {
-  const longtasks = sdk.getLongTasks();
-  const data = {
-    text: "longtasks",
-    data: longtasks,
-  };
-
-  chrome.runtime.sendMessage(data);
-};
-
-// Function to send the cpu usage stats
-const sendCPU = (data) => {
-  chrome.runtime.sendMessage(data);
-};
-
-// Function to send the summary to the APP as JSON
-const sendSummaryAsJSON = () => {
-  const memorySummary = sdk.getMemoryStats();
-  const networkSummary = sdk.getNetworkStats(0);
-  const longTaskSummary = sdk.getLongTasks();
-
-  const s1 = "Memory Summary: " + JSON.stringify(memorySummary) + "\n";
-  const s2 = "Network Summary: " + JSON.stringify(networkSummary) + "\n";
-  const s3 = "Long Tasks Summary: " + JSON.stringify(longTaskSummary) + "\n";
-
-  const allSummary = s1 + s2 + s3;
-
-  const data = {
-    text: "copy",
-    data: allSummary,
-  };
-
-  chrome.runtime.sendMessage(data);
-};
