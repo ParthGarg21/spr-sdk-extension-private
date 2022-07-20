@@ -114,7 +114,7 @@ const App = () => {
             </div>
           </Tippy>
 
-          <Tippy content="Print message on console" placement="bottom">
+          <Tippy content="Print summary on console" placement="bottom">
             <div>
               <VscOutput
                 className="menu-icn"
